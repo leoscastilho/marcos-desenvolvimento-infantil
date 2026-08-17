@@ -10,6 +10,10 @@
 
 A cartilha original é uma lista de verificação por idade: você olha a página dos 18 meses e confere os marcos dos 18 meses. Isso tem um problema conhecido — quem responde já sabe qual é a resposta "certa" e tende a confirmá-la.
 
+A página inicial explica o roteiro, credita a origem dos marcos e traz o link para
+[baixar a cartilha original em PDF](https://www.sbp.com.br/fileadmin/user_upload/_24327e-Cartilha_de_Desenvolvimento-2m-5anos_compressed.pdf),
+que continua sendo a referência completa — com ilustrações, dicas de estímulo por idade e a página de "o que fazer se algo preocupa".
+
 Esta página inverte a ordem. **A idade só é perguntada no fim.** Antes disso, você percorre quatro áreas do desenvolvimento respondendo etapas cada vez mais avançadas, sem saber a que idade cada uma corresponde. O perfil é montado depois, comparando o que a criança de fato faz com o que se espera para a idade informada.
 
 ### As quatro áreas
@@ -57,11 +61,21 @@ Só depois das quatro áreas a página pede:
 
 ### 4. O resultado
 
-Um gráfico de quatro pistas, uma por área, preenchida até a etapa alcançada, com um marcador vertical na etapa esperada para a idade:
+O perfil aparece em duas visualizações, na mesma posição da página, alternadas por abas ou deslizando o dedo para o lado (no teclado, setas ← →):
+
+**Trilhas por área.** Quatro pistas, uma por área, preenchidas até a etapa alcançada, com um marcador vertical na etapa esperada para a idade:
 
 - **Verde** — no esperado ou acima
 - **Âmbar** — uma etapa atrás
 - **Coral** — duas etapas ou mais atrás
+
+**Gráfico de teia.** Um radar de quatro eixos, um por área, com a escala das 12 etapas do centro para fora:
+
+- O **polígono azul apagado** ao fundo é o esperado para a idade informada — como todas as áreas compartilham a mesma expectativa, ele é sempre um losango regular
+- Por cima, em **traço escuro**, o que a criança de fato faz; cada vértice recebe a cor da situação daquela área (verde, âmbar ou coral)
+- O **contorno tracejado** meia etapa à frente, com um ponto vazado, marca as etapas respondidas como *faz em parte* — o que já está começando
+
+A forma é o ponto: um losango encolhido de maneira uniforme é diferente de um losango torto, e é justamente o desnível entre áreas que interessa clinicamente. Na impressão, as duas visualizações saem uma abaixo da outra.
 
 Abaixo do gráfico vêm os alertas, nesta ordem de peso:
 
@@ -101,6 +115,7 @@ Sociedade Brasileira de Pediatria (SBP) em parceria com o CDC, mediante devida a
 - **Apresentação:** Clóvis Francisco Constantino, Presidente da SBP
 
 Site da SBP: <https://www.sbp.com.br>
+PDF da cartilha: <https://www.sbp.com.br/fileadmin/user_upload/_24327e-Cartilha_de_Desenvolvimento-2m-5anos_compressed.pdf>
 
 ### Recomendações de triagem
 

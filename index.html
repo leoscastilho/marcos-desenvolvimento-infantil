@@ -47,6 +47,12 @@ h1{
 }
 h1 em{font-style:italic;color:var(--coral)}
 .sub{max-width:44ch;margin:0 auto;color:var(--tinta-70);font-size:15px}
+.fatos{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:8px 14px;margin:16px 0 0;
+  font-family:var(--dado);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-70);
+}
+.fatos span{display:flex;align-items:center;gap:8px}
+.fatos span+span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--linha)}
 
 /* ---------- cartões ---------- */
 .card{
@@ -69,6 +75,8 @@ button{font-family:inherit;font-size:inherit;cursor:pointer}
 .btn:active{transform:translateY(1px)}
 .btn.fantasma{background:transparent;color:var(--tinta);border:1.5px solid var(--linha)}
 .btn.fantasma:hover{background:var(--fundo)}
+a.btn{text-decoration:none;display:inline-flex;align-items:center;gap:9px}
+a.btn:focus-visible{outline:3px solid var(--rio);outline-offset:2px}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--rio);outline-offset:2px}
 
 /* ---------- trilha de progresso ---------- */
@@ -149,6 +157,41 @@ select,input[type=number]{
 .legenda span{display:flex;align-items:center;gap:6px}
 .chave{width:12px;height:12px;border-radius:3px;display:inline-block}
 
+/* ---------- abas do resultado ---------- */
+.abas{
+  display:flex;gap:4px;background:var(--fundo);border:1px solid var(--linha);
+  border-radius:999px;padding:4px;margin:16px 0 14px;
+}
+.aba{
+  flex:1;border:0;background:transparent;border-radius:999px;padding:9px 8px;
+  font-weight:600;font-size:14px;color:var(--tinta-70);
+  transition:background .15s,color .15s,box-shadow .15s;
+}
+.aba[aria-selected="true"]{background:var(--papel);color:var(--tinta);box-shadow:0 1px 4px rgba(36,28,78,.16)}
+.palco-graficos{overflow:hidden;touch-action:pan-y;transition:height .32s ease}
+.faixa-graficos{display:flex;align-items:flex-start;transition:transform .32s cubic-bezier(.3,.7,.3,1)}
+.painel{flex:0 0 100%;width:100%;min-width:0}
+.dica-deslize{font-size:12px;color:var(--tinta-70);text-align:center;margin:12px 0 0}
+
+/* ---------- resultado: gráfico de teia ---------- */
+.teia{display:block;width:100%;max-width:470px;height:auto;margin:2px auto 0}
+.teia .grade{fill:none;stroke:var(--linha);stroke-width:1}
+.teia .eixo{stroke:var(--linha);stroke-width:1}
+.teia .tique{stroke:var(--linha);stroke-width:1}
+.teia .anel-rot{
+  font-family:var(--dado);font-size:9px;fill:var(--tinta-70);
+  stroke:var(--papel);stroke-width:3.5;paint-order:stroke;stroke-linejoin:round;
+}
+.teia .nome{font-size:13px;font-weight:700;fill:var(--tinta)}
+.teia .valor{font-size:11px;fill:var(--tinta-70);font-family:var(--dado)}
+.teia .ideal{fill:var(--rio);fill-opacity:.34;stroke:var(--rio);stroke-width:1.5;stroke-opacity:.6;stroke-linejoin:round}
+.teia .real{fill:var(--tinta);fill-opacity:.14;stroke:var(--tinta);stroke-width:2.5;stroke-linejoin:round}
+.teia .emergente{fill:none;stroke:var(--tinta);stroke-width:2;stroke-dasharray:5 4;stroke-opacity:.8;stroke-linejoin:round}
+.teia .ponto{stroke:var(--papel);stroke-width:2}
+.teia .ponto-emerg{fill:var(--papel);stroke:var(--tinta);stroke-width:2;stroke-dasharray:3 2.4;stroke-opacity:.85}
+.chave.tracejada{background:none;border-top:2px dashed var(--tinta);border-radius:0;height:0;width:16px;opacity:.7}
+.chave.linha-cheia{background:none;border-top:3px solid var(--tinta);border-radius:0;height:0;width:16px}
+
 /* ---------- blocos de status ---------- */
 .status{border-radius:14px;padding:16px 18px;margin:12px 0;border-left:5px solid}
 .status h4{margin:0 0 6px;font-size:15.5px}
@@ -177,8 +220,11 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
 @media (prefers-reduced-motion:reduce){.aparece{animation:none}}
 @media print{
   body{background:#fff}
-  .acoes,.trilha{display:none}
+  .acoes,.trilha,.abas,.dica-deslize{display:none}
   .card{box-shadow:none;break-inside:avoid}
+  .palco-graficos{height:auto !important;overflow:visible}
+  .faixa-graficos{display:block;transform:none !important}
+  .painel{break-inside:avoid;margin-bottom:22px}
 }
 </style>
 </head>
@@ -189,13 +235,17 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
   <div class="selo">Aprenda os sinais · Aja cedo</div>
   <h1>Marcos do <em>Desenvolvimento Infantil</em></h1>
   <p class="sub">Roteiro interativo de 2 meses a 5 anos: você responde área por área, informa a idade no fim e recebe um perfil para levar à consulta com o pediatra.</p>
+  <div class="fatos">
+    <span>4 áreas</span><span>159 marcos</span><span>5 a 10 minutos</span><span>nada é salvo</span>
+  </div>
 </header>
 
 <div id="palco"></div>
 
 <p class="rodape">
   Marcos adaptados da cartilha <strong>“Aprenda os Sinais. Aja cedo.”</strong> — CDC, traduzida e distribuída pela
-  Sociedade Brasileira de Pediatria e pela Sociedade Paraibana de Pediatria.<br>
+  Sociedade Brasileira de Pediatria e pela Sociedade Paraibana de Pediatria
+  (<a href="https://www.sbp.com.br/fileadmin/user_upload/_24327e-Cartilha_de_Desenvolvimento-2m-5anos_compressed.pdf" target="_blank" rel="noopener">baixar o PDF</a>).<br>
   Esta página não é exame, triagem validada nem diagnóstico. Ela organiza suas observações para a conversa com o pediatra.
 </p>
 
@@ -206,6 +256,7 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
    MARCOS — 12 etapas por área, em ordem crescente.
    As idades ficam ocultas durante o questionário de propósito.
    ============================================================ */
+const LINK_CARTILHA = "https://www.sbp.com.br/fileadmin/user_upload/_24327e-Cartilha_de_Desenvolvimento-2m-5anos_compressed.pdf";
 const IDADES = [2,4,6,9,12,15,18,24,30,36,48,60];
 const ROTULOS = ["2 meses","4 meses","6 meses","9 meses","12 meses","15 meses","18 meses","2 anos","30 meses","3 anos","4 anos","5 anos"];
 
@@ -381,6 +432,26 @@ function telaIntro(){
     <div class="acoes"><button class="btn" id="comecar">Começar pela primeira área</button></div>
   `;
   palco.appendChild(c);
+
+  const cc=document.createElement("div");
+  cc.className="card aparece";
+  cc.innerHTML=`
+    <div class="eyebrow">A fonte</div>
+    <h2>De onde vêm estas perguntas</h2>
+    <p>Os 159 marcos são os da cartilha <strong>“Aprenda os Sinais. Aja cedo.”</strong>, tradução brasileira do programa
+    <em>Learn the Signs. Act Early.</em> do CDC, feita pela Sociedade Brasileira de Pediatria com a Sociedade Paraibana de
+    Pediatria. Ela cobre 12 faixas de idade, de 2 meses a 5 anos, e reúne o que a maioria das crianças (75% ou mais) já faz
+    em cada uma delas. Aqui os marcos viraram perguntas e a ordem foi invertida — na cartilha, você lê direto a página da
+    idade da criança.</p>
+    <div class="acoes">
+      <a class="btn" href="${LINK_CARTILHA}" target="_blank" rel="noopener">Baixar a cartilha em PDF</a>
+      <a class="btn fantasma" href="https://www.sbp.com.br" target="_blank" rel="noopener">Site da SBP</a>
+    </div>
+    <p class="miudo" style="margin-top:14px">PDF hospedado pela SBP. Vale ter o arquivo à mão: ele traz as ilustrações,
+    as dicas de estímulo para cada idade e a página de “o que fazer se algo preocupa”, que esta versão não reproduz.</p>
+  `;
+  palco.appendChild(cc);
+
   document.getElementById("comecar").onclick=()=>{estado.tela="perguntas";render();};
 }
 
@@ -560,6 +631,143 @@ function telaFinal(){
 }
 
 /* ============================================================
+   GRÁFICO DE TEIA (radar)
+   Fundo: o polígono esperado para a idade, em azul apagado.
+   Por cima: o que a criança faz de fato, em traço escuro.
+   Tracejado: a etapa que já está começando ("faz em parte").
+   ============================================================ */
+function svgTeia(analise,esperado,total,corrigida){
+  const N=analise.length;
+  const CX=250, CY=214, R=132;
+  const CORES={ok:"var(--agua)",atencao:"var(--ambar)",alerta:"var(--coral)"};
+  const ang=i=>-Math.PI/2 + i*2*Math.PI/N;
+  const ponto=(i,v)=>{
+    const r=R*Math.max(0,Math.min(v,total))/total;
+    return [+(CX+r*Math.cos(ang(i))).toFixed(1), +(CY+r*Math.sin(ang(i))).toFixed(1)];
+  };
+  const poli=vals=>vals.map((v,i)=>ponto(i,v).join(",")).join(" ");
+  const curto=v=>v<1?"—":ROTULOS[v-1].replace(" meses","m").replace(" mês","m").replace(" anos","a");
+
+  const vIdeal=analise.map(()=>esperado+1);
+  const vReal=analise.map(a=>a.alc+1);
+  const vEmerg=analise.map((a,i)=>vReal[i]+(a.emergente?0.5:0));
+  const temEmerg=analise.some(a=>a.emergente);
+
+  /* grade */
+  const aneis=[3,6,9,12];
+  let grade="";
+  aneis.forEach(v=>{ grade+=`<polygon class="grade" points="${poli(analise.map(()=>v))}"></polygon>`; });
+  for(let i=0;i<N;i++){
+    const p=ponto(i,total);
+    grade+=`<line class="eixo" x1="${CX}" y1="${CY}" x2="${p[0]}" y2="${p[1]}"></line>`;
+    for(let v=1;v<=total;v++){
+      const a=ponto(i,v), dir=ang(i);
+      const nx=-Math.sin(dir)*3, ny=Math.cos(dir)*3;
+      grade+=`<line class="tique" x1="${(a[0]-nx).toFixed(1)}" y1="${(a[1]-ny).toFixed(1)}" x2="${(a[0]+nx).toFixed(1)}" y2="${(a[1]+ny).toFixed(1)}"></line>`;
+    }
+  }
+  let rotAneis="";
+  aneis.forEach(v=>{
+    const y=CY-R*v/total;
+    rotAneis+=`<text class="anel-rot" x="${CX+9}" y="${(y+12).toFixed(1)}">${curto(v)}</text>`;
+  });
+
+  /* rótulos das áreas */
+  const cantos=[
+    {x:CX,        yn:CY-R-30, yv:CY-R-15, a:"middle"},
+    {x:CX+R+12,   yn:CY-4,    yv:CY+12,   a:"start"},
+    {x:CX,        yn:CY+R+27, yv:CY+R+42, a:"middle"},
+    {x:CX-R-12,   yn:CY-4,    yv:CY+12,   a:"end"}
+  ];
+  let rotulos="";
+  analise.forEach((a,i)=>{
+    const c=cantos[i%4];
+    rotulos+=`<text class="nome" x="${c.x}" y="${c.yn}" text-anchor="${c.a}">${a.area.curto}</text>`;
+    rotulos+=`<text class="valor" x="${c.x}" y="${c.yv}" text-anchor="${c.a}">${a.alc<0?"antes da 1ª":curto(vReal[i])}${a.emergente?" +":""}</text>`;
+  });
+
+  /* pontos da criança, coloridos pela situação da área */
+  let pontos="";
+  analise.forEach((a,i)=>{
+    if(a.emergente){
+      const e=ponto(i,vEmerg[i]);
+      pontos+=`<circle class="ponto-emerg" cx="${e[0]}" cy="${e[1]}" r="4.5"></circle>`;
+    }
+    const p=ponto(i,vReal[i]);
+    pontos+=`<circle class="ponto" cx="${p[0]}" cy="${p[1]}" r="5.5" fill="${CORES[a.classe]}"></circle>`;
+  });
+
+  return `
+  <svg class="teia" viewBox="0 0 500 420" role="img"
+       aria-label="Gráfico de teia comparando o esperado para ${textoIdade(corrigida)} com o que a criança faz em cada área.">
+    <g>${grade}</g>
+    <polygon class="ideal" points="${poli(vIdeal)}"></polygon>
+    <g>${rotAneis}</g>
+    <polygon class="real" points="${poli(vReal)}"></polygon>
+    ${temEmerg?`<polygon class="emergente" points="${poli(vEmerg)}"></polygon>`:""}
+    ${pontos}
+    <g>${rotulos}</g>
+  </svg>`;
+}
+
+/* ============================================================
+   ABAS DO RESULTADO — clique, seta do teclado ou deslize lateral
+   ============================================================ */
+let ajusteAlturaAbas=null;
+function montaAbas(){
+  const palcoG=document.getElementById("palco-graficos");
+  const faixa=document.getElementById("faixa-graficos");
+  const abas=Array.from(document.querySelectorAll(".aba"));
+  const painels=Array.from(document.querySelectorAll(".painel"));
+  if(!palcoG||!faixa||!abas.length) return;
+  let idx=0;
+
+  function altura(){ palcoG.style.height=painels[idx].offsetHeight+"px"; }
+  function mostra(n,foco){
+    const novo=Math.max(0,Math.min(n,painels.length-1));
+    if(novo===idx && foco!==true) { altura(); return; }
+    idx=novo;
+    faixa.style.transform="translateX("+(-idx*100)+"%)";
+    abas.forEach((b,i)=>b.setAttribute("aria-selected",i===idx?"true":"false"));
+    painels.forEach((p,i)=>p.setAttribute("aria-hidden",i===idx?"false":"true"));
+    altura();
+    if(foco) abas[idx].focus();
+  }
+
+  abas.forEach((b,i)=>{
+    b.onclick=()=>mostra(i);
+    b.onkeydown=e=>{
+      if(e.key==="ArrowRight"||e.key==="ArrowDown"){e.preventDefault();mostra(idx+1,true);}
+      if(e.key==="ArrowLeft"||e.key==="ArrowUp"){e.preventDefault();mostra(idx-1,true);}
+    };
+  });
+
+  let x0=null,y0=null,eixo=null;
+  palcoG.addEventListener("touchstart",e=>{
+    if(e.touches.length!==1){x0=null;return;}
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY; eixo=null;
+  },{passive:true});
+  palcoG.addEventListener("touchmove",e=>{
+    if(x0===null||eixo!==null||e.touches.length!==1) return;
+    const dx=e.touches[0].clientX-x0, dy=e.touches[0].clientY-y0;
+    if(Math.abs(dx)>10||Math.abs(dy)>10) eixo=Math.abs(dx)>Math.abs(dy)?"h":"v";
+  },{passive:true});
+  palcoG.addEventListener("touchend",e=>{
+    if(x0===null) return;
+    const dx=e.changedTouches[0].clientX-x0;
+    if(eixo==="h"&&Math.abs(dx)>45) mostra(dx<0?idx+1:idx-1);
+    x0=null; eixo=null;
+  },{passive:true});
+
+  painels.forEach((p,i)=>p.setAttribute("aria-hidden",i===0?"false":"true"));
+  if(ajusteAlturaAbas) window.removeEventListener("resize",ajusteAlturaAbas);
+  ajusteAlturaAbas=altura;
+  window.addEventListener("resize",altura);
+  requestAnimationFrame(altura);
+  setTimeout(altura,250);
+}
+
+/* ============================================================
    RESULTADO
    ============================================================ */
 function telaResultado(){
@@ -608,14 +816,38 @@ function telaResultado(){
       ? `<p class="miudo">Como o nascimento foi prematuro, a comparação usa a idade corrigida de <strong>${textoIdade(corrigida)}</strong> — o critério habitual até os 2 anos.</p>`
       : ""}
     <p>${resumoTexto}</p>
-    <div class="grafico" id="grafico"></div>
-    <div class="regua">${ROTULOS.map(r=>`<span>${r.replace(" meses","m").replace(" anos","a").replace(" mês","m")}</span>`).join("")}</div>
-    <div class="legenda">
-      <span><i class="chave" style="background:var(--agua)"></i> No esperado ou acima</span>
-      <span><i class="chave" style="background:var(--ambar)"></i> Uma etapa atrás</span>
-      <span><i class="chave" style="background:var(--coral)"></i> Duas etapas ou mais</span>
-      <span><i class="chave" style="background:var(--tinta);width:3px;height:14px;border-radius:0"></i> Idade da criança</span>
+
+    <div class="abas" role="tablist" aria-label="Formato do gráfico">
+      <button class="aba" role="tab" id="aba-0" aria-controls="painel-0" aria-selected="true">Trilhas por área</button>
+      <button class="aba" role="tab" id="aba-1" aria-controls="painel-1" aria-selected="false">Gráfico de teia</button>
     </div>
+
+    <div class="palco-graficos" id="palco-graficos">
+      <div class="faixa-graficos" id="faixa-graficos">
+
+        <section class="painel" id="painel-0" role="tabpanel" aria-labelledby="aba-0">
+          <div class="grafico" id="grafico"></div>
+          <div class="regua">${ROTULOS.map(r=>`<span>${r.replace(" meses","m").replace(" anos","a").replace(" mês","m")}</span>`).join("")}</div>
+          <div class="legenda">
+            <span><i class="chave" style="background:var(--agua)"></i> No esperado ou acima</span>
+            <span><i class="chave" style="background:var(--ambar)"></i> Uma etapa atrás</span>
+            <span><i class="chave" style="background:var(--coral)"></i> Duas etapas ou mais</span>
+            <span><i class="chave" style="background:var(--tinta);width:3px;height:14px;border-radius:0"></i> Idade da criança</span>
+          </div>
+        </section>
+
+        <section class="painel" id="painel-1" role="tabpanel" aria-labelledby="aba-1">
+          <div id="teia"></div>
+          <div class="legenda">
+            <span><i class="chave" style="background:var(--rio);opacity:.45"></i> Esperado para ${textoIdade(corrigida)}</span>
+            <span><i class="chave linha-cheia"></i> O que a criança faz</span>
+            ${analise.some(a=>a.emergente)?'<span><i class="chave tracejada"></i> Etapa começando</span>':""}
+          </div>
+        </section>
+
+      </div>
+    </div>
+    <p class="dica-deslize">Deslize para o lado ou toque nas abas para trocar de gráfico.</p>
   `;
   palco.appendChild(c1);
 
@@ -637,6 +869,9 @@ function telaResultado(){
     `;
     g.appendChild(el);
   });
+
+  document.getElementById("teia").innerHTML=svgTeia(analise,esperado,total,corrigida);
+  montaAbas();
 
   /* ---- alertas ---- */
   const c2=document.createElement("div");
