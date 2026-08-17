@@ -218,13 +218,78 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
 .aparece{animation:sobe .28s ease both}
 @keyframes sobe{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.aparece{animation:none}}
+/* ---------- folha de impressão (montada só na tela de resultado) ---------- */
+.so-impressao{display:none}
+
 @media print{
+  @page{margin:10mm}
   body{background:#fff}
   .acoes,.trilha,.abas,.dica-deslize{display:none}
   .card{box-shadow:none;break-inside:avoid}
   .palco-graficos{height:auto !important;overflow:visible}
   .faixa-graficos{display:block;transform:none !important}
   .painel{break-inside:avoid;margin-bottom:22px}
+
+  /* na tela de resultado, imprime a folha resumida no lugar da página */
+  body.tem-impressao header.topo,
+  body.tem-impressao #palco,
+  body.tem-impressao .rodape{display:none !important}
+  body.tem-impressao .so-impressao{display:block}
+  body.tem-impressao{font-size:10pt;line-height:1.38}
+  body.tem-impressao .wrap{max-width:none;padding:0}
+
+  .imp-topo{
+    display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
+    border-bottom:2px solid var(--tinta);padding-bottom:6px;margin-bottom:10px;
+  }
+  .imp-selo{font-family:var(--dado);font-size:6.6pt;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta-70)}
+  .imp-titulo{font-family:var(--display);font-style:italic;font-size:18pt;line-height:1.05;margin:2px 0 0}
+  .imp-meta{font-family:var(--dado);font-size:7.2pt;line-height:1.55;text-align:right;color:var(--tinta-70)}
+  .imp-meta b{display:block;font-size:9pt;color:var(--tinta);letter-spacing:.04em}
+  .imp-resumo{font-size:9.6pt;margin:0 0 9px}
+
+  .imp-h{
+    font-family:var(--dado);font-size:7pt;letter-spacing:.16em;text-transform:uppercase;font-weight:400;
+    color:var(--tinta-70);margin:0 0 7px;padding-bottom:4px;border-bottom:1px solid var(--linha);
+  }
+  .imp-secao{margin-bottom:6px}
+  .imp-cols{display:flex;gap:18px;align-items:flex-start;margin-bottom:11px}
+  .imp-col-a{flex:0 0 43%}
+  .imp-col-b{flex:1;min-width:0}
+  .imp-cols .teia{max-width:none;width:100%;margin:0}
+  .imp-legenda{font-size:7.4pt;color:var(--tinta-70);text-align:center;margin:2px 0 0}
+  .imp-legenda b{font-weight:700}
+
+  table.imp-tab{width:100%;border-collapse:collapse}
+  table.imp-tab th{
+    font-family:var(--dado);font-size:6.4pt;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--tinta-70);font-weight:400;text-align:left;padding:0 5px 4px 0;
+  }
+  table.imp-tab td{padding:5.5px 5px 5.5px 0;border-top:1px solid var(--linha);font-size:8.8pt;vertical-align:middle}
+  table.imp-tab td.area{font-weight:700;font-size:9pt}
+  table.imp-tab td:last-child,table.imp-tab th:last-child{padding-right:0;text-align:right}
+  .imp-chip{
+    display:inline-block;border:1px solid;border-radius:999px;padding:1px 7px;
+    font-family:var(--dado);font-size:6.4pt;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+  }
+
+  .imp-aviso{border-left:3px solid;padding:1px 0 2px 9px;margin:0 0 8px;font-size:8.8pt;break-inside:avoid}
+  .imp-aviso b{display:block;font-size:9.2pt}
+  .imp-aviso span{color:var(--tinta-70)}
+
+  .imp-faltas{columns:2;column-gap:20px;font-size:8.2pt;line-height:1.32}
+  .imp-falta{break-inside:avoid;margin:0 0 8px}
+  .imp-falta b{display:block;font-size:8.7pt;margin-bottom:2px}
+  .imp-falta ul{margin:0;padding-left:13px}
+  .imp-falta li{margin-bottom:1px}
+  .imp-falta .mais{color:var(--tinta-70);font-style:italic;margin-top:2px}
+
+  .imp-notas{border:1px solid var(--linha);border-radius:6px;padding:6px 10px 1px;break-inside:avoid}
+  .imp-notas .risco{border-bottom:1px solid var(--linha);height:7mm}
+  .imp-rodape{
+    margin-top:7px;padding-top:5px;border-top:1px solid var(--linha);
+    font-size:7pt;line-height:1.42;color:var(--tinta-70);
+  }
 }
 </style>
 </head>
@@ -404,6 +469,9 @@ function textoIdade(meses){
    ============================================================ */
 function render(){
   palco.innerHTML="";
+  const folha=document.getElementById("impressao");
+  if(folha) folha.remove();
+  document.body.classList.remove("tem-impressao");
   if(estado.tela==="intro") telaIntro();
   else if(estado.tela==="perguntas") telaPergunta();
   else if(estado.tela==="final") telaFinal();
@@ -711,6 +779,106 @@ function svgTeia(analise,esperado,total,corrigida){
 }
 
 /* ============================================================
+   FOLHA DE IMPRESSÃO
+   Uma página resumida, montada fora do #palco: gráfico de teia,
+   tabela por área, alertas em uma linha, marcos da idade que
+   faltam e espaço para anotações. Nada depende de cor de fundo —
+   navegadores costumam imprimir sem "gráficos de plano de fundo",
+   então tudo aqui é traço, texto ou SVG.
+   ============================================================ */
+function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
+  const antigo=document.getElementById("impressao");
+  if(antigo) antigo.remove();
+
+  const COR={ok:"var(--agua)",atencao:"var(--ambar)",alerta:"var(--coral)",info:"var(--rio)"};
+  const hoje=new Date().toLocaleDateString("pt-BR");
+  const prem=estado.prematuro==="sim";
+  const corrigiu=prem && estado.meses<24 && estado.semanasPrem>0;
+
+  const linhas=analise.map(a=>`
+    <tr>
+      <td class="area">${a.area.nome}</td>
+      <td>${a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc]}${a.emergente?" <span style=\"color:var(--tinta-70)\">+ começando</span>":""}</td>
+      <td><span class="imp-chip" style="color:${COR[a.classe]};border-color:${COR[a.classe]}">${a.rotulo}</span></td>
+    </tr>`).join("");
+
+  const listaAvisos=avisos.map(av=>`
+    <div class="imp-aviso" style="border-color:${COR[av.n]}">
+      <b>${av.t}</b><span>${av.curto}</span>
+    </div>`).join("");
+
+  const faltas=analise.map(a=>{
+    if(!a.faltando.length) return "";
+    const daIdade=a.alc<esperado?a.area.niveis[esperado]:[];
+    const anteriores=a.faltando.length-daIdade.length;
+    return `<div class="imp-falta">
+      <b>${a.area.nome}</b>
+      ${daIdade.length?`<ul>${daIdade.map(m=>`<li>${m}</li>`).join("")}</ul>`:""}
+      ${anteriores>0?`<div class="mais">+ ${anteriores} marco${anteriores>1?"s":""} de etapas anteriores</div>`:""}
+    </div>`;
+  }).join("");
+
+  const s=document.createElement("section");
+  s.className="so-impressao"; s.id="impressao";
+  s.innerHTML=`
+    <div class="imp-topo">
+      <div>
+        <div class="imp-selo">Aprenda os sinais · Aja cedo</div>
+        <div class="imp-titulo">Marcos do Desenvolvimento Infantil</div>
+      </div>
+      <div class="imp-meta">
+        <b>${textoIdade(estado.meses)}</b>
+        ${prem?`prematura, ${40-estado.semanasPrem} semanas<br>`:""}
+        ${corrigiu?`idade corrigida ${textoIdade(corrigida)}<br>`:""}
+        esperado para a idade: ${ROTULOS[esperado]}<br>
+        impresso em ${hoje}
+      </div>
+    </div>
+
+    <p class="imp-resumo">${resumoTexto}</p>
+
+    <div class="imp-cols">
+      <div class="imp-col-a">
+        <div class="imp-h">Perfil em teia</div>
+        ${svgTeia(analise,esperado,total,corrigida)}
+        <p class="imp-legenda">
+          <b style="color:var(--rio)">▨</b> esperado para a idade &nbsp;
+          <b style="color:var(--tinta)">▬</b> o que a criança faz
+          ${analise.some(a=>a.emergente)?'&nbsp; <b style="color:var(--tinta)">◌</b> etapa começando':""}
+        </p>
+        <div class="imp-h" style="margin-top:12px">Anotações para a consulta</div>
+        <div class="imp-notas">
+          <div class="risco"></div><div class="risco"></div><div class="risco" style="border-bottom:0"></div>
+        </div>
+      </div>
+      <div class="imp-col-b">
+        <div class="imp-h">Resumo por área</div>
+        <table class="imp-tab">
+          <thead><tr><th>Área</th><th>Etapa completa</th><th>Situação</th></tr></thead>
+          <tbody>${linhas}</tbody>
+        </table>
+        <div class="imp-h" style="margin-top:14px">O que merece atenção</div>
+        ${listaAvisos}
+      </div>
+    </div>
+
+    ${faltas?`<div class="imp-secao">
+      <div class="imp-h">Marcos de ${ROTULOS[esperado]} que ainda faltam</div>
+      <div class="imp-faltas">${faltas}</div>
+    </div>`:""}
+
+    <div class="imp-rodape">
+      Perfil montado a partir das observações de quem convive com a criança, sem armazenamento de dados.
+      <strong>Não é exame, triagem validada nem diagnóstico</strong> — serve para organizar a conversa com o pediatra.
+      Marcos adaptados da cartilha “Aprenda os Sinais. Aja cedo.” — CDC, traduzida e distribuída pela Sociedade Brasileira
+      de Pediatria e pela Sociedade Paraibana de Pediatria. Cartilha completa: sbp.com.br.
+    </div>
+  `;
+  document.querySelector(".wrap").appendChild(s);
+  document.body.classList.add("tem-impressao");
+}
+
+/* ============================================================
    ABAS DO RESULTADO — clique, seta do teclado ou deslize lateral
    ============================================================ */
 let ajusteAlturaAbas=null;
@@ -873,87 +1041,73 @@ function telaResultado(){
   document.getElementById("teia").innerHTML=svgTeia(analise,esperado,total,corrigida);
   montaAbas();
 
-  /* ---- alertas ---- */
-  const c2=document.createElement("div");
-  c2.className="card aparece";
-  c2.innerHTML=`<h2>O que merece atenção</h2>`;
-  let algumAlerta=false;
+  /* ---- alertas: montados uma vez, em duas versões (tela e impressão) ---- */
+  const avisos=[];
 
   if(estado.perdeu==="sim"){
-    algumAlerta=true;
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-alerta">
-        <h4>Perda de habilidade já conquistada</h4>
-        <p>Uma criança deixar de fazer algo que já fazia é o sinal mais importante desta página, independentemente de qualquer outra resposta.
-        Procure o pediatra e descreva exatamente o que ela fazia, quando parou e como foi a mudança.</p>
-      </div>`);
+    avisos.push({n:"alerta",peso:true,
+      t:"Perda de habilidade já conquistada",
+      longo:"Uma criança deixar de fazer algo que já fazia é o sinal mais importante desta página, independentemente de qualquer outra resposta. Procure o pediatra e descreva exatamente o que ela fazia, quando parou e como foi a mudança.",
+      curto:"Sinal mais importante do roteiro. Descrever ao pediatra o que ela fazia, quando parou e como foi a mudança."});
   }
   graves.forEach(a=>{
-    algumAlerta=true;
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-alerta">
-        <h4>${a.area.nome}: duas ou mais etapas atrás</h4>
-        <p>A criança alcançou os marcos de ${a.alc<0?"antes da primeira etapa":ROTULOS[a.alc]}, e para ${textoIdade(corrigida)} espera-se os de ${ROTULOS[esperado]}.
-        Peça ao pediatra uma triagem do desenvolvimento e, se a preocupação continuar, um encaminhamento para especialista.</p>
-      </div>`);
+    avisos.push({n:"alerta",peso:true,
+      t:`${a.area.nome}: duas ou mais etapas atrás`,
+      longo:`A criança alcançou os marcos de ${a.alc<0?"antes da primeira etapa":ROTULOS[a.alc]}, e para ${textoIdade(corrigida)} espera-se os de ${ROTULOS[esperado]}. Peça ao pediatra uma triagem do desenvolvimento e, se a preocupação continuar, um encaminhamento para especialista.`,
+      curto:`Alcançou ${a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc]}; esperado ${ROTULOS[esperado]}. Pedir triagem do desenvolvimento e, se persistir, encaminhamento.`});
   });
   analise.filter(a=>a.dif===-1).forEach(a=>{
-    algumAlerta=true;
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-atencao">
-        <h4>${a.area.nome}: marcos da idade ainda incompletos</h4>
-        <p>Faltam marcos de ${ROTULOS[esperado]}. Não é motivo para alarme por si só, mas é exatamente o tipo de detalhe que vale
-        levar anotado para a próxima consulta.</p>
-      </div>`);
+    avisos.push({n:"atencao",peso:true,
+      t:`${a.area.nome}: marcos da idade ainda incompletos`,
+      longo:`Faltam marcos de ${ROTULOS[esperado]}. Não é motivo para alarme por si só, mas é exatamente o tipo de detalhe que vale levar anotado para a próxima consulta.`,
+      curto:`Faltam marcos de ${ROTULOS[esperado]}. Não é alarme por si só — é anotação para a consulta.`});
   });
   if(desnivel>=2){
-    algumAlerta=true;
     const alta=analise.reduce((x,y)=>y.alc>x.alc?y:x);
     const baixa=analise.reduce((x,y)=>y.alc<x.alc?y:x);
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-atencao">
-        <h4>Desenvolvimento desigual entre as áreas</h4>
-        <p>${alta.area.nome} está bem à frente de ${baixa.area.nome}. Ir bem em uma área não compensa o atraso em outra —
-        e a diferença entre elas é uma informação clínica útil por si só. Mostre este perfil ao pediatra.</p>
-      </div>`);
+    avisos.push({n:"atencao",peso:true,
+      t:"Desenvolvimento desigual entre as áreas",
+      longo:`${alta.area.nome} está bem à frente de ${baixa.area.nome}. Ir bem em uma área não compensa o atraso em outra — e a diferença entre elas é uma informação clínica útil por si só. Mostre este perfil ao pediatra.`,
+      curto:`${alta.area.curto} está bem à frente de ${baixa.area.curto}. A distância entre as áreas é informação clínica por si só.`});
   }
   const incertasTotal=analise.reduce((s,a)=>s+a.incertas,0);
   if(incertasTotal>=3){
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-info">
-        <h4>Várias respostas foram “não sei dizer”</h4>
-        <p>Isso deixa o perfil menos confiável. Observe a criança nessas situações durante alguns dias e refaça o roteiro —
-        ou leve as próprias dúvidas para a consulta, que também são informação.</p>
-      </div>`);
+    avisos.push({n:"info",peso:false,
+      t:"Várias respostas foram “não sei dizer”",
+      longo:"Isso deixa o perfil menos confiável. Observe a criança nessas situações durante alguns dias e refaça o roteiro — ou leve as próprias dúvidas para a consulta, que também são informação.",
+      curto:`${incertasTotal} respostas de “não sei dizer” — o perfil ficou menos confiável nesses pontos.`});
   }
   if(estado.preocupa==="sim"){
-    algumAlerta=true;
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-atencao">
-        <h4>Você marcou que algo preocupa</h4>
-        <p>Sua preocupação basta como motivo para conversar com o pediatra, mesmo que todas as áreas apareçam no esperado.
-        Quem convive com a criança percebe coisas que nenhum roteiro cobre.</p>
-      </div>`);
+    avisos.push({n:"atencao",peso:true,
+      t:"Você marcou que algo preocupa",
+      longo:"Sua preocupação basta como motivo para conversar com o pediatra, mesmo que todas as áreas apareçam no esperado. Quem convive com a criança percebe coisas que nenhum roteiro cobre.",
+      curto:"Quem respondeu marcou que algo preocupa — motivo suficiente para conversar com o pediatra."});
   }
-  // lembrete de triagem por idade
   const janelas=[{m:9,t:"9 meses",extra:""},{m:18,t:"18 meses",extra:" e uma triagem de autismo"},{m:24,t:"2 anos",extra:" e uma triagem de autismo"},{m:30,t:"30 meses",extra:""}];
   const janela=janelas.filter(j=>estado.meses>=j.m && estado.meses<j.m+3).pop();
   if(janela){
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-info">
-        <h4>É hora de uma triagem do desenvolvimento</h4>
-        <p>Aos ${janela.t}, a recomendação é fazer uma triagem geral do desenvolvimento${janela.extra}, para todas as crianças.
-        Pergunte ao pediatra sobre isso nesta consulta.</p>
-      </div>`);
+    avisos.push({n:"info",peso:false,
+      t:"É hora de uma triagem do desenvolvimento",
+      longo:`Aos ${janela.t}, a recomendação é fazer uma triagem geral do desenvolvimento${janela.extra}, para todas as crianças. Pergunte ao pediatra sobre isso nesta consulta.`,
+      curto:`Aos ${janela.t} recomenda-se triagem geral do desenvolvimento${janela.extra}, para todas as crianças.`});
   }
-  if(!algumAlerta){
-    c2.insertAdjacentHTML("beforeend",`
-      <div class="status s-ok">
-        <h4>Nada aqui pede pressa</h4>
-        <p>As respostas não apontaram marcos faltando para a idade nem sinais de alerta. Siga com as consultas de rotina
-        e refaça este roteiro na próxima faixa de idade.</p>
-      </div>`);
+  if(!avisos.some(a=>a.peso)){
+    avisos.push({n:"ok",peso:false,
+      t:"Nada aqui pede pressa",
+      longo:"As respostas não apontaram marcos faltando para a idade nem sinais de alerta. Siga com as consultas de rotina e refaça este roteiro na próxima faixa de idade.",
+      curto:"Sem marcos faltando para a idade e sem sinais de alerta. Seguir com as consultas de rotina."});
   }
+
+  const c2=document.createElement("div");
+  c2.className="card aparece";
+  c2.innerHTML=`<h2>O que merece atenção</h2>`;
+  avisos.forEach(av=>{
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-${av.n}">
+        <h4>${av.t}</h4>
+        <p>${av.longo}</p>
+      </div>`);
+  });
   palco.appendChild(c2);
 
   /* ---- detalhe por área ---- */
@@ -1003,8 +1157,11 @@ function telaResultado(){
       <button class="btn" onclick="window.print()">Imprimir ou salvar em PDF</button>
       <button class="btn fantasma" id="refazer">Refazer do início</button>
     </div>
+    <p class="miudo" style="margin-top:12px">A impressão sai resumida: uma folha com o gráfico de teia, a situação de
+    cada área, os alertas, os marcos que faltam para a idade e espaço para anotar na consulta.</p>
   `;
   palco.appendChild(c4);
+  montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto);
   document.getElementById("refazer").onclick=()=>{
     estado.tela="intro"; estado.areaAtual=0; estado.nivelAtual=0;
     estado.meses=null; estado.prematuro=null; estado.semanasPrem=0; estado.perdeu=null; estado.preocupa=null;

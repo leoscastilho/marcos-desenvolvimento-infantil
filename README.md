@@ -86,7 +86,21 @@ Abaixo do gráfico vêm os alertas, nesta ordem de peso:
 5. **Excesso de "não sei dizer"** — indica que o perfil ficou menos confiável e vale reobservar
 6. **Janela de triagem recomendada** — lembrete aos 9, 18, 24 e 30 meses (com triagem de autismo aos 18 meses e 2 anos)
 
-Cada área traz ainda a lista exata dos marcos que faltam para a idade, e há um botão de imprimir/salvar em PDF para levar à consulta.
+Cada área traz ainda a lista exata dos marcos que faltam para a idade.
+
+### 5. A folha impressa
+
+Imprimir não imprime a página: o botão gera uma folha própria, montada para caber em **uma página A4** e ser lida por quem atende. Ela traz, nessa ordem:
+
+- Cabeçalho com a idade, a idade corrigida quando houver, a etapa esperada e a data da impressão
+- A frase-resumo do perfil
+- O **gráfico de teia** e, abaixo dele, um quadro em branco para anotações durante a consulta
+- Uma tabela com a etapa completa e a situação de cada área
+- Os alertas reduzidos a uma linha cada — os mesmos da tela, em versão curta
+- Os **marcos da idade que ainda faltam**, área por área, em duas colunas; os marcos de etapas anteriores entram só como contagem ("+ 17 marcos de etapas anteriores"), que é o que mantém a folha em uma página
+- Rodapé com os créditos e o aviso de que não é exame nem diagnóstico
+
+Um detalhe que motivou o formato: navegadores imprimem **sem os fundos coloridos** por padrão, e a primeira versão saía com as barras vazias e sem o gráfico. Na folha atual nada depende de `background` — tudo é traço, texto ou SVG —, então ela sai igual com ou sem a opção "gráficos de plano de fundo" ligada.
 
 ---
 
