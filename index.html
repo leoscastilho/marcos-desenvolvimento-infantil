@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marcos do Desenvolvimento Infantil — roteiro interativo de 2 meses a 5 anos</title>
+<style>
+:root{
+  --tinta:#241C4E;
+  --tinta-70:#5b5480;
+  --rio:#7BA7D7;
+  --rio-claro:#D8E7F5;
+  --coral:#E4576E;
+  --coral-claro:#FBE4E8;
+  --agua:#2E9E8F;
+  --agua-claro:#DDF0EC;
+  --ambar:#D98A21;
+  --ambar-claro:#FBEEDA;
+  --fundo:#F3F0F8;
+  --papel:#FFFFFF;
+  --linha:#E3DEEF;
+  --display:Georgia,'Times New Roman',serif;
+  --corpo:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --dado:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--fundo);
+  color:var(--tinta);
+  font-family:var(--corpo);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:740px;margin:0 auto;padding:24px 18px 72px}
+
+/* ---------- cabeçalho ---------- */
+header.topo{padding:28px 0 18px;text-align:center}
+.selo{
+  font-family:var(--dado);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tinta-70);
+}
+h1{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:clamp(30px,7vw,46px);line-height:1.05;margin:10px 0 6px;
+}
+h1 em{font-style:italic;color:var(--coral)}
+.sub{max-width:44ch;margin:0 auto;color:var(--tinta-70);font-size:15px}
+
+/* ---------- cartões ---------- */
+.card{
+  background:var(--papel);border:1px solid var(--linha);border-radius:18px;
+  padding:26px 22px;margin:18px 0;
+  box-shadow:0 1px 0 rgba(36,28,78,.04),0 12px 30px -24px rgba(36,28,78,.5);
+}
+.card h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:25px;margin:0 0 10px}
+.card h3{font-size:15px;margin:22px 0 8px;letter-spacing:.01em}
+p{margin:0 0 12px}
+.miudo{font-size:13.5px;color:var(--tinta-70)}
+
+/* ---------- botões ---------- */
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+.btn{
+  display:inline-block;background:var(--tinta);color:#fff;border:0;border-radius:999px;
+  padding:14px 28px;font-weight:600;font-size:16px;transition:transform .12s ease,background .12s ease;
+}
+.btn:hover{background:#160f38}
+.btn:active{transform:translateY(1px)}
+.btn.fantasma{background:transparent;color:var(--tinta);border:1.5px solid var(--linha)}
+.btn.fantasma:hover{background:var(--fundo)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--rio);outline-offset:2px}
+
+/* ---------- trilha de progresso ---------- */
+.trilha{display:flex;gap:6px;align-items:center;margin-bottom:22px;flex-wrap:wrap}
+.area-chip{
+  font-family:var(--dado);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;border:1px solid var(--linha);color:var(--tinta-70);
+  background:var(--papel);
+}
+.area-chip.ativa{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.area-chip.feita{background:var(--rio-claro);color:var(--tinta);border-color:var(--rio-claro)}
+
+/* ---------- pergunta ---------- */
+.eyebrow{
+  font-family:var(--dado);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--coral);margin-bottom:4px;
+}
+.etapa{font-family:var(--dado);font-size:12px;color:var(--tinta-70);letter-spacing:.08em}
+.enunciado{font-size:16px;margin:14px 0 4px;color:var(--tinta-70)}
+ul.marcos{list-style:none;margin:14px 0 24px;padding:0}
+ul.marcos li{
+  position:relative;padding:11px 0 11px 30px;border-top:1px solid var(--linha);font-size:16.5px;
+}
+ul.marcos li:last-child{border-bottom:1px solid var(--linha)}
+ul.marcos li::before{
+  content:"";position:absolute;left:6px;top:19px;width:9px;height:9px;border-radius:50%;
+  background:var(--rio);
+}
+.respostas{display:grid;gap:9px}
+.resp{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--papel);border:1.5px solid var(--linha);border-radius:14px;
+  padding:14px 16px;font-weight:600;color:var(--tinta);transition:border-color .12s,background .12s;
+}
+.resp:hover{border-color:var(--tinta);background:#FAF8FD}
+.resp .glifo{
+  font-family:var(--dado);font-size:12px;width:26px;height:26px;flex:0 0 26px;border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-weight:700;
+}
+.resp[data-v="sim"] .glifo{background:var(--agua)}
+.resp[data-v="parcial"] .glifo{background:var(--rio)}
+.resp[data-v="nao"] .glifo{background:var(--coral)}
+.resp[data-v="naosei"] .glifo{background:var(--tinta-70)}
+.resp small{display:block;font-weight:400;font-size:13px;color:var(--tinta-70)}
+.voltar{background:none;border:0;color:var(--tinta-70);font-size:13.5px;padding:14px 0 0;text-decoration:underline}
+
+/* ---------- formulário final ---------- */
+.campo{margin:0 0 18px}
+label{display:block;font-weight:600;font-size:15px;margin-bottom:7px}
+select,input[type=number]{
+  font-family:var(--corpo);font-size:16px;padding:11px 12px;border:1.5px solid var(--linha);
+  border-radius:12px;background:var(--papel);color:var(--tinta);
+}
+.linha-campos{display:flex;gap:10px;flex-wrap:wrap}
+.opcoes{display:flex;gap:8px;flex-wrap:wrap}
+.opt{
+  border:1.5px solid var(--linha);background:var(--papel);border-radius:999px;padding:9px 18px;font-weight:600;
+}
+.opt[aria-pressed="true"]{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+
+/* ---------- resultado: gráfico de trilhas ---------- */
+.grafico{margin:8px 0 6px}
+.faixa{margin:0 0 18px}
+.faixa-topo{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px}
+.faixa-nome{font-weight:700;font-size:15px}
+.faixa-valor{font-family:var(--dado);font-size:12px;color:var(--tinta-70)}
+.pista{position:relative;height:26px;background:var(--fundo);border-radius:999px;overflow:hidden}
+.pista .preenche{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--rio)}
+.pista .preenche.ok{background:var(--agua)}
+.pista .preenche.atencao{background:var(--ambar)}
+.pista .preenche.alerta{background:var(--coral)}
+.marcador{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--tinta)}
+.marcador::after{
+  content:"";position:absolute;top:-3px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--tinta);
+}
+.regua{display:flex;justify-content:space-between;font-family:var(--dado);font-size:10px;color:var(--tinta-70);margin-top:6px}
+.legenda{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--tinta-70);margin-top:14px}
+.legenda span{display:flex;align-items:center;gap:6px}
+.chave{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+/* ---------- blocos de status ---------- */
+.status{border-radius:14px;padding:16px 18px;margin:12px 0;border-left:5px solid}
+.status h4{margin:0 0 6px;font-size:15.5px}
+.status p{margin:0;font-size:14.5px}
+.s-ok{background:var(--agua-claro);border-color:var(--agua)}
+.s-atencao{background:var(--ambar-claro);border-color:var(--ambar)}
+.s-alerta{background:var(--coral-claro);border-color:var(--coral)}
+.s-info{background:var(--rio-claro);border-color:var(--rio)}
+.tag{
+  display:inline-block;font-family:var(--dado);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle;
+}
+.t-ok{background:var(--agua-claro);color:#1c6a5f}
+.t-atencao{background:var(--ambar-claro);color:#8a5610}
+.t-alerta{background:var(--coral-claro);color:#a52a40}
+.t-info{background:var(--rio-claro);color:#33587c}
+ul.faltantes{margin:8px 0 0;padding-left:20px;font-size:14.5px}
+ul.faltantes li{margin-bottom:5px}
+details{border-top:1px solid var(--linha);padding:12px 0}
+summary{cursor:pointer;font-weight:600;font-size:15px}
+.rodape{font-size:12.5px;color:var(--tinta-70);text-align:center;margin-top:28px;line-height:1.6}
+.acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.oculto{display:none !important}
+.aparece{animation:sobe .28s ease both}
+@keyframes sobe{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.aparece{animation:none}}
+@media print{
+  body{background:#fff}
+  .acoes,.trilha{display:none}
+  .card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="topo">
+  <div class="selo">Aprenda os sinais · Aja cedo</div>
+  <h1>Marcos do <em>Desenvolvimento Infantil</em></h1>
+  <p class="sub">Roteiro interativo de 2 meses a 5 anos: você responde área por área, informa a idade no fim e recebe um perfil para levar à consulta com o pediatra.</p>
+</header>
+
+<div id="palco"></div>
+
+<p class="rodape">
+  Marcos adaptados da cartilha <strong>“Aprenda os Sinais. Aja cedo.”</strong> — CDC, traduzida e distribuída pela
+  Sociedade Brasileira de Pediatria e pela Sociedade Paraibana de Pediatria.<br>
+  Esta página não é exame, triagem validada nem diagnóstico. Ela organiza suas observações para a conversa com o pediatra.
+</p>
+
+</div>
+
+<script>
+/* ============================================================
+   MARCOS — 12 etapas por área, em ordem crescente.
+   As idades ficam ocultas durante o questionário de propósito.
+   ============================================================ */
+const IDADES = [2,4,6,9,12,15,18,24,30,36,48,60];
+const ROTULOS = ["2 meses","4 meses","6 meses","9 meses","12 meses","15 meses","18 meses","2 anos","30 meses","3 anos","4 anos","5 anos"];
+
+const AREAS = [
+{
+  id:"social", nome:"Social e Emocional", curto:"Social",
+  intro:"Como a criança se relaciona, demonstra afeto e reage às pessoas.",
+  niveis:[
+    ["Se acalma quando você conversa com ela ou a pega no colo","Olha para o seu rosto","Parece feliz ao ver você chegar perto","Sorri quando você fala ou sorri para ela"],
+    ["Sorri sozinha para chamar a sua atenção","Ri quando você tenta fazê-la rir (ainda não uma gargalhada)","Olha, se mexe ou faz sons para conseguir e manter a sua atenção"],
+    ["Reconhece pessoas conhecidas","Gosta de se olhar no espelho","Dá risadas"],
+    ["Fica tímida, agarrada ou com medo perto de estranhos","Mostra várias expressões no rosto: alegria, tristeza, raiva, surpresa","Olha quando você a chama pelo nome","Reage quando você sai do ambiente (olha, estende a mão ou chora)","Sorri ou ri quando você brinca de “achou!”"],
+    ["Brinca junto com você, como parceira de brincadeira"],
+    ["Imita outras crianças enquanto brinca","Mostra a você um objeto de que gosta","Bate palmas quando fica animada","Abraça bonecos de pelúcia ou outro brinquedo","Demonstra carinho com abraços ou beijos"],
+    ["Se afasta de você, mas confere se você continua por perto","Aponta para mostrar algo interessante","Estende as mãos para você lavar","Olha algumas páginas de um livro junto com você","Ajuda a se vestir, empurrando o braço pela manga ou levantando o pé"],
+    ["Percebe quando alguém está machucado ou triste, como parar ou ficar séria quando outra pessoa chora","Olha para o seu rosto para saber como reagir numa situação nova"],
+    ["Brinca ao lado de outras crianças e às vezes com elas","Chama a sua atenção para o que consegue fazer: “Olha eu!”","Segue rotinas simples quando você pede, como ajudar a guardar os brinquedos"],
+    ["Se acalma em até 10 minutos depois que você a deixa na creche ou escola","Observa outras crianças e se junta a elas para brincar"],
+    ["Faz de conta que é um personagem: professor, super-herói, cachorro","Pede para brincar com outras crianças quando não há ninguém por perto","Consola quem está triste ou machucado, como abraçar um amigo que chora","Evita perigos, como não pular de lugares altos no parquinho","Gosta de ser “ajudante”","Muda o jeito de se comportar conforme o lugar: igreja, biblioteca, parquinho"],
+    ["Segue regras ou espera a vez ao brincar com outras crianças","Canta, dança ou faz apresentações para você","Faz tarefas simples em casa, como juntar meias ou limpar a mesa"]
+  ]
+},
+{
+  id:"linguagem", nome:"Linguagem e Comunicação", curto:"Linguagem",
+  intro:"Como a criança se comunica, entende e usa palavras e gestos.",
+  niveis:[
+    ["Faz outros sons além do choro","Reage a sons altos"],
+    ["Faz sons como “oooo” e “aahh”","Faz sons quando você fala com ela","Vira a cabeça na direção da sua voz"],
+    ["Reveza sons com você, como numa conversa","Sopra e coloca a língua para fora fazendo “barulhinho de saliva”","Faz sons agudos, tipo gritinhos"],
+    ["Faz sons repetidos como “mamamama” e “babababa”","Levanta os braços para ser pega no colo"],
+    ["Acena “tchau”","Chama “mamã”, “papá” ou outro nome especial","Entende o “não” — para ou dá uma pausa quando você fala"],
+    ["Tenta falar uma ou duas palavras além de “mama” e “papa”, como “bo” de bola","Olha para um objeto conhecido quando você diz o nome dele","Segue um pedido feito com gesto e palavra, como entregar o brinquedo quando você estende a mão e pede","Aponta para pedir algo ou para pedir ajuda"],
+    ["Tenta falar três ou mais palavras além de “mamãe” e “papai”","Segue pedidos sem gesto nenhum, só com a fala: “me dá”"],
+    ["Aponta coisas no livro quando você pergunta, como “cadê o urso?”","Junta pelo menos duas palavras, como “mais leite”","Aponta pelo menos duas partes do corpo quando você pede","Usa outros gestos além de acenar e apontar, como mandar beijo ou balançar a cabeça dizendo sim"],
+    ["Fala em torno de 50 palavras","Fala duas ou mais palavras com um verbo, como “corre cachorro”","Diz o nome das coisas no livro quando você aponta e pergunta “o que é isso?”","Usa palavras como “eu”, “você” e “nós”"],
+    ["Conversa com você com pelo menos duas trocas de turno","Faz perguntas com “quem”, “o quê”, “onde” ou “por quê”","Diz que ação está acontecendo numa figura, como “correndo” ou “comendo”","Fala o próprio nome quando perguntam","Fala de um jeito que outras pessoas entendem, na maior parte do tempo"],
+    ["Fala frases com quatro ou mais palavras","Repete trechos de uma música, história ou parlenda","Conta pelo menos uma coisa que aconteceu no dia dela, como “eu joguei bola”","Responde perguntas simples, como “para que serve um casaco?”"],
+    ["Conta uma história, ouvida ou inventada, com pelo menos dois acontecimentos","Responde perguntas simples sobre um livro ou história depois de ouvi-la","Mantém uma conversa com mais de três trocas de turno","Usa ou reconhece rimas simples"]
+  ]
+},
+{
+  id:"cognitivo", nome:"Cognitivo", curto:"Cognitivo",
+  intro:"Como a criança aprende, pensa e resolve problemas.",
+  niveis:[
+    ["Acompanha você com o olhar enquanto você se movimenta","Olha para um brinquedo por vários segundos"],
+    ["Abre a boca ao ver o peito ou a mamadeira quando está com fome","Olha para as próprias mãos com interesse"],
+    ["Leva coisas à boca para explorar","Estica o braço para pegar um brinquedo que quer","Fecha os lábios para mostrar que não quer mais comida"],
+    ["Procura objetos que caem ou saem do campo de visão, como a colher ou o brinquedo","Bate dois objetos um no outro"],
+    ["Coloca algo dentro de um recipiente, como um bloco no copo","Procura o que viu você esconder, como um brinquedo embaixo do cobertor"],
+    ["Tenta usar as coisas do jeito certo, como telefone, copo ou livro","Empilha pelo menos dois objetos pequenos, como blocos"],
+    ["Copia você fazendo tarefas, como varrer com a vassoura","Brinca com brinquedos de um jeito simples, como empurrar o carrinho"],
+    ["Segura algo com uma mão enquanto usa a outra, como segurar o pote e tirar a tampa","Tenta usar interruptores, botões ou chaves de um brinquedo","Brinca com mais de um brinquedo ao mesmo tempo, como pôr comidinha no pratinho"],
+    ["Usa objetos para fingir, como dar de comer à boneca usando um bloco","Resolve problemas simples, como subir num banquinho para alcançar algo","Segue pedidos de duas etapas, como “põe o brinquedo no chão e fecha a porta”","Mostra que conhece pelo menos uma cor, como apontar o lápis vermelho quando você pergunta"],
+    ["Desenha um círculo depois que você mostra como","Evita tocar em coisas quentes, como o fogão, quando você avisa"],
+    ["Diz o nome de algumas cores","Conta o que vem a seguir numa história que já conhece","Desenha uma pessoa com três ou mais partes do corpo"],
+    ["Conta até 10","Diz alguns números de 1 a 5 quando você aponta para eles","Usa palavras de tempo, como “ontem”, “amanhã”, “de manhã”, “de noite”","Mantém a atenção por 5 a 10 minutos numa atividade, como a hora da história ou um trabalho manual (tempo de tela não conta)","Escreve algumas letras do próprio nome","Diz o nome de algumas letras quando você aponta"]
+  ]
+},
+{
+  id:"motor", nome:"Movimento e Desenvolvimento Físico", curto:"Movimento",
+  intro:"Como a criança se move, equilibra e usa as mãos.",
+  niveis:[
+    ["Sustenta a cabeça erguida quando está de bruços","Move os dois braços e as duas pernas","Abre as mãos por alguns instantes"],
+    ["Mantém a cabeça firme sem apoio quando você a segura","Segura um brinquedo colocado na mão dela","Usa os braços para balançar brinquedos","Leva as mãos à boca","Apoia-se nos cotovelos e antebraços para levantar o tronco quando está de bruços"],
+    ["Rola de barriga para cima para barriga para baixo","Estica os braços para empurrar o corpo para cima quando está de bruços","Apoia-se nas mãos para se manter sentada"],
+    ["Chega sozinha à posição sentada","Passa objetos de uma mão para a outra","Usa os dedos para levar comida à boca sozinha","Senta sem apoio"],
+    ["Se puxa para ficar de pé","Anda apoiada nos móveis","Bebe em copo sem tampa enquanto você segura","Pega coisas com a ponta do polegar e do indicador, como pedacinhos de comida"],
+    ["Dá alguns passos sozinha","Come pedacinhos de comida usando os dedos"],
+    ["Anda sem se segurar em ninguém nem em nada","Rabisca","Bebe em copo sem tampa, mesmo derramando às vezes","Come sozinha com as mãos","Tenta usar a colher","Sobe e desce do sofá ou da cadeira sem ajuda"],
+    ["Chuta uma bola","Corre","Sobe degraus com ou sem ajuda","Come com a colher"],
+    ["Usa as mãos para girar coisas, como maçanetas e tampas","Tira algumas roupas sozinha, como calça folgada ou jaqueta aberta","Pula do chão com os dois pés ao mesmo tempo","Vira as páginas do livro, uma de cada vez, enquanto você lê"],
+    ["Enfia itens em um fio, como contas grandes ou macarrão","Veste algumas roupas sozinha, como calça folgada ou jaqueta","Usa garfo"],
+    ["Pega uma bola grande na maioria das vezes","Se serve de comida ou água, com um adulto por perto","Desabotoa alguns botões","Segura o lápis entre os dedos e o polegar, não com a mão fechada"],
+    ["Abotoa alguns botões","Pula em um pé só"]
+  ]
+}
+];
+
+const OPCOES = [
+  {v:"sim",     g:"S", t:"Já faz",            d:"Faz tudo o que está na lista, sem ajuda especial"},
+  {v:"parcial", g:"P", t:"Faz em parte",      d:"Faz alguns itens da lista, outros ainda não"},
+  {v:"nao",     g:"N", t:"Ainda não faz",     d:"Nenhum item da lista, ou quase nenhum"},
+  {v:"naosei",  g:"?", t:"Não sei dizer",     d:"Nunca observei ou tenho dúvida"}
+];
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+const estado = {
+  tela:"intro",
+  areaAtual:0,
+  nivelAtual:0,
+  respostas:{},      // id da área -> array de respostas
+  meses:null,
+  prematuro:null,
+  semanasPrem:0,
+  perdeu:null,
+  preocupa:null
+};
+AREAS.forEach(a=>estado.respostas[a.id]=[]);
+
+const palco = document.getElementById("palco");
+
+/* ============================================================
+   LÓGICA DA ESCADA
+   Continua subindo enquanto a criança acompanha.
+   Para quando houver duas etapas seguidas sem um "já faz" —
+   assim um tropeço isolado não encerra a área cedo demais.
+   ============================================================ */
+function deveParar(respostas){
+  if(respostas.length>=IDADES.length) return true;
+  const n = respostas.length;
+  if(n<2) return false;
+  return respostas[n-1]!=="sim" && respostas[n-2]!=="sim";
+}
+function nivelAlcancado(respostas){
+  let ultimo=-1;
+  respostas.forEach((r,i)=>{ if(r==="sim") ultimo=i; });
+  return ultimo; // -1 = nenhuma etapa completa
+}
+function temEmergente(respostas){
+  const alc=nivelAlcancado(respostas);
+  return respostas[alc+1]==="parcial";
+}
+function nivelEsperado(meses){
+  let idx=0;
+  IDADES.forEach((m,i)=>{ if(meses>=m) idx=i; });
+  return meses<IDADES[0] ? -1 : idx;
+}
+function mesesCorrigidos(){
+  if(estado.prematuro==="sim" && estado.semanasPrem>0 && estado.meses<24){
+    return Math.max(0, estado.meses - estado.semanasPrem/4.345);
+  }
+  return estado.meses;
+}
+function textoIdade(meses){
+  const m=Math.round(meses);
+  if(m<24) return m+" meses";
+  const anos=Math.floor(m/12), resto=m%12;
+  return resto===0 ? anos+" anos" : anos+" anos e "+resto+(resto===1?" mês":" meses");
+}
+
+/* ============================================================
+   TELAS
+   ============================================================ */
+function render(){
+  palco.innerHTML="";
+  if(estado.tela==="intro") telaIntro();
+  else if(estado.tela==="perguntas") telaPergunta();
+  else if(estado.tela==="final") telaFinal();
+  else telaResultado();
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+function telaIntro(){
+  const c=document.createElement("div");
+  c.className="card aparece";
+  c.innerHTML=`
+    <h2>Como funciona</h2>
+    <p>Você vai percorrer quatro áreas do desenvolvimento. Em cada uma, as etapas ficam mais avançadas
+    conforme você avança — e a idade correspondente a cada etapa fica escondida de propósito, para que a resposta
+    venha da observação, não da expectativa.</p>
+    <p>A área termina quando a criança deixa de acompanhar duas etapas seguidas. Só no fim você informa a idade real,
+    e aí a página monta o perfil comparando o que a criança faz com o que se espera para essa idade.</p>
+    <h3>Antes de começar</h3>
+    <p class="miudo">Responda pensando no que a criança faz <strong>hoje, sozinha e com frequência</strong> — não no que
+    ela fez uma vez ou no que faz só com muita ajuda. Leva de 5 a 10 minutos. Nada é salvo: ao fechar a página, tudo se perde.</p>
+    <div class="status s-info" style="margin-top:18px">
+      <h4>Isto não substitui a consulta</h4>
+      <p>Os marcos mostram o que a maioria das crianças (75% ou mais) faz em cada idade. Esta página organiza suas
+      observações, mas não é triagem validada nem diagnóstico. Quem avalia o desenvolvimento é o pediatra.</p>
+    </div>
+    <div class="acoes"><button class="btn" id="comecar">Começar pela primeira área</button></div>
+  `;
+  palco.appendChild(c);
+  document.getElementById("comecar").onclick=()=>{estado.tela="perguntas";render();};
+}
+
+function telaPergunta(){
+  const area=AREAS[estado.areaAtual];
+  const nivel=estado.nivelAtual;
+  const itens=area.niveis[nivel];
+
+  const trilha=document.createElement("div");
+  trilha.className="trilha";
+  AREAS.forEach((a,i)=>{
+    const chip=document.createElement("span");
+    chip.className="area-chip"+(i===estado.areaAtual?" ativa":(i<estado.areaAtual?" feita":""));
+    chip.textContent=a.curto;
+    trilha.appendChild(chip);
+  });
+  palco.appendChild(trilha);
+
+  const c=document.createElement("div");
+  c.className="card aparece";
+  c.innerHTML=`
+    <div class="eyebrow">${area.nome}</div>
+    <div class="etapa">Etapa ${nivel+1}</div>
+    <p class="enunciado">${nivel===0?area.intro+"<br>":""}A criança já faz o seguinte?</p>
+    <ul class="marcos">${itens.map(i=>`<li>${i}</li>`).join("")}</ul>
+    <div class="respostas">
+      ${OPCOES.map(o=>`
+        <button class="resp" data-v="${o.v}">
+          <span class="glifo">${o.g}</span>
+          <span>${o.t}<small>${o.d}</small></span>
+        </button>`).join("")}
+    </div>
+    ${(estado.areaAtual>0||nivel>0)?'<button class="voltar" id="voltar">Voltar uma etapa</button>':''}
+  `;
+  palco.appendChild(c);
+
+  c.querySelectorAll(".resp").forEach(b=>{
+    b.onclick=()=>responder(b.dataset.v);
+  });
+  const v=document.getElementById("voltar");
+  if(v) v.onclick=voltar;
+}
+
+function responder(valor){
+  const area=AREAS[estado.areaAtual];
+  estado.respostas[area.id].push(valor);
+  if(deveParar(estado.respostas[area.id])){
+    if(estado.areaAtual<AREAS.length-1){
+      estado.areaAtual++;
+      estado.nivelAtual=0;
+    }else{
+      estado.tela="final";
+    }
+  }else{
+    estado.nivelAtual++;
+  }
+  render();
+}
+
+function voltar(){
+  if(estado.nivelAtual>0){
+    estado.respostas[AREAS[estado.areaAtual].id].pop();
+    estado.nivelAtual--;
+  }else if(estado.areaAtual>0){
+    estado.areaAtual--;
+    const r=estado.respostas[AREAS[estado.areaAtual].id];
+    r.pop();
+    estado.nivelAtual=r.length;
+  }
+  estado.tela="perguntas";
+  render();
+}
+
+function telaFinal(){
+  const c=document.createElement("div");
+  c.className="card aparece";
+  c.innerHTML=`
+    <div class="eyebrow">Última parte</div>
+    <h2>Agora sim: a idade da criança</h2>
+    <p class="miudo">Com a idade real, a página compara o que você respondeu com os marcos esperados para esse momento.</p>
+
+    <div class="campo">
+      <label for="anos">Idade hoje</label>
+      <div class="linha-campos">
+        <select id="anos"></select>
+        <select id="meses"></select>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Nasceu prematura, antes de 37 semanas?</label>
+      <div class="opcoes" id="prem">
+        <button class="opt" data-v="nao" aria-pressed="false">Não</button>
+        <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+      </div>
+      <div id="semanas-bloco" class="oculto" style="margin-top:12px">
+        <label for="semanas">Com quantas semanas de gestação nasceu?</label>
+        <select id="semanas"></select>
+        <p class="miudo" style="margin-top:6px">Até os 2 anos, o esperado é comparar pela idade corrigida.</p>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>A criança perdeu alguma habilidade que já tinha?</label>
+      <div class="opcoes" id="perdeu">
+        <button class="opt" data-v="nao" aria-pressed="false">Não</button>
+        <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Existe algo que a criança faz, ou deixa de fazer, que preocupa você?</label>
+      <div class="opcoes" id="preocupa">
+        <button class="opt" data-v="nao" aria-pressed="false">Não</button>
+        <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+      </div>
+    </div>
+
+    <div class="acoes">
+      <button class="btn" id="ver">Ver o perfil de desenvolvimento</button>
+      <button class="btn fantasma" id="voltar2">Voltar uma etapa</button>
+    </div>
+    <p class="miudo" id="aviso" style="margin-top:12px"></p>
+  `;
+  palco.appendChild(c);
+
+  const selAnos=document.getElementById("anos");
+  for(let a=0;a<=5;a++){
+    selAnos.insertAdjacentHTML("beforeend",`<option value="${a}">${a} ${a===1?"ano":"anos"}</option>`);
+  }
+  const selMeses=document.getElementById("meses");
+  for(let m=0;m<=11;m++){
+    selMeses.insertAdjacentHTML("beforeend",`<option value="${m}">${m} ${m===1?"mês":"meses"}</option>`);
+  }
+  const selSem=document.getElementById("semanas");
+  for(let s=24;s<=36;s++){
+    selSem.insertAdjacentHTML("beforeend",`<option value="${s}">${s} semanas</option>`);
+  }
+  selSem.value="32";
+
+  function grupo(id,campo){
+    document.querySelectorAll("#"+id+" .opt").forEach(b=>{
+      b.onclick=()=>{
+        document.querySelectorAll("#"+id+" .opt").forEach(o=>o.setAttribute("aria-pressed","false"));
+        b.setAttribute("aria-pressed","true");
+        estado[campo]=b.dataset.v;
+        if(id==="prem"){
+          document.getElementById("semanas-bloco").classList.toggle("oculto",b.dataset.v!=="sim");
+        }
+      };
+    });
+  }
+  grupo("prem","prematuro");
+  grupo("perdeu","perdeu");
+  grupo("preocupa","preocupa");
+
+  document.getElementById("voltar2").onclick=()=>{
+    estado.tela="perguntas";
+    voltar();
+  };
+  document.getElementById("ver").onclick=()=>{
+    const anos=parseInt(selAnos.value,10), meses=parseInt(selMeses.value,10);
+    const total=anos*12+meses;
+    if(total<2){
+      document.getElementById("aviso").textContent="A cartilha começa aos 2 meses. Para bebês menores, converse diretamente com o pediatra.";
+      return;
+    }
+    if(estado.prematuro===null||estado.perdeu===null||estado.preocupa===null){
+      document.getElementById("aviso").textContent="Responda as três perguntas acima para continuar.";
+      return;
+    }
+    estado.meses=total;
+    if(estado.prematuro==="sim") estado.semanasPrem=Math.max(0,40-parseInt(selSem.value,10));
+    estado.tela="resultado";
+    render();
+  };
+}
+
+/* ============================================================
+   RESULTADO
+   ============================================================ */
+function telaResultado(){
+  const corrigida=mesesCorrigidos();
+  const esperado=nivelEsperado(corrigida);
+  const total=IDADES.length;
+
+  const analise=AREAS.map(area=>{
+    const r=estado.respostas[area.id];
+    const alc=nivelAlcancado(r);
+    const dif=alc-esperado;
+    let classe,rotulo,tag;
+    if(dif>=1){ classe="ok"; rotulo="Acima do esperado"; tag="t-ok"; }
+    else if(dif===0){ classe="ok"; rotulo="Compatível com a idade"; tag="t-ok"; }
+    else if(dif===-1){ classe="atencao"; rotulo="Marcos da idade incompletos"; tag="t-atencao"; }
+    else { classe="alerta"; rotulo="Distância importante"; tag="t-alerta"; }
+    const incertas=r.filter(x=>x==="naosei").length;
+    // marcos que faltam: das etapas acima da alcançada até a esperada
+    const faltando=[];
+    for(let i=alc+1;i<=esperado && i<total;i++){
+      area.niveis[i].forEach(m=>faltando.push(m));
+    }
+    return {area,r,alc,dif,classe,rotulo,tag,incertas,faltando,emergente:temEmergente(r)};
+  });
+
+  const indices=analise.map(a=>a.alc);
+  const desnivel=Math.max(...indices)-Math.min(...indices);
+  const atrasadas=analise.filter(a=>a.dif<0);
+  const graves=analise.filter(a=>a.dif<=-2);
+
+  /* ---- cartão de resumo + gráfico ---- */
+  const c1=document.createElement("div");
+  c1.className="card aparece";
+  let resumoTexto;
+  if(graves.length>0){
+    resumoTexto="Em "+(graves.length===1?"uma área":graves.length+" áreas")+" a distância em relação ao esperado é grande o suficiente para levar ao pediatra sem esperar a próxima consulta de rotina.";
+  }else if(atrasadas.length>0){
+    resumoTexto="A criança ainda não completou os marcos esperados em "+(atrasadas.length===1?"uma área":atrasadas.length+" áreas")+". Leve esses pontos à próxima consulta.";
+  }else{
+    resumoTexto="A criança alcançou os marcos esperados nas quatro áreas. Continue acompanhando: os marcos mudam a cada consulta.";
+  }
+  c1.innerHTML=`
+    <div class="eyebrow">Perfil de ${textoIdade(estado.meses)}</div>
+    <h2>Onde a criança está em cada área</h2>
+    ${estado.prematuro==="sim"&&estado.meses<24&&estado.semanasPrem>0
+      ? `<p class="miudo">Como o nascimento foi prematuro, a comparação usa a idade corrigida de <strong>${textoIdade(corrigida)}</strong> — o critério habitual até os 2 anos.</p>`
+      : ""}
+    <p>${resumoTexto}</p>
+    <div class="grafico" id="grafico"></div>
+    <div class="regua">${ROTULOS.map(r=>`<span>${r.replace(" meses","m").replace(" anos","a").replace(" mês","m")}</span>`).join("")}</div>
+    <div class="legenda">
+      <span><i class="chave" style="background:var(--agua)"></i> No esperado ou acima</span>
+      <span><i class="chave" style="background:var(--ambar)"></i> Uma etapa atrás</span>
+      <span><i class="chave" style="background:var(--coral)"></i> Duas etapas ou mais</span>
+      <span><i class="chave" style="background:var(--tinta);width:3px;height:14px;border-radius:0"></i> Idade da criança</span>
+    </div>
+  `;
+  palco.appendChild(c1);
+
+  const g=document.getElementById("grafico");
+  analise.forEach(a=>{
+    const larg=((a.alc+1)/total)*100;
+    const marc=((esperado+1)/total)*100;
+    const el=document.createElement("div");
+    el.className="faixa";
+    el.innerHTML=`
+      <div class="faixa-topo">
+        <span class="faixa-nome">${a.area.nome}</span>
+        <span class="faixa-valor">${a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc]}${a.emergente?" +":""}</span>
+      </div>
+      <div class="pista">
+        <div class="preenche ${a.classe}" style="width:${Math.max(larg,0)}%"></div>
+        <div class="marcador" style="left:${marc}%"></div>
+      </div>
+    `;
+    g.appendChild(el);
+  });
+
+  /* ---- alertas ---- */
+  const c2=document.createElement("div");
+  c2.className="card aparece";
+  c2.innerHTML=`<h2>O que merece atenção</h2>`;
+  let algumAlerta=false;
+
+  if(estado.perdeu==="sim"){
+    algumAlerta=true;
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-alerta">
+        <h4>Perda de habilidade já conquistada</h4>
+        <p>Uma criança deixar de fazer algo que já fazia é o sinal mais importante desta página, independentemente de qualquer outra resposta.
+        Procure o pediatra e descreva exatamente o que ela fazia, quando parou e como foi a mudança.</p>
+      </div>`);
+  }
+  graves.forEach(a=>{
+    algumAlerta=true;
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-alerta">
+        <h4>${a.area.nome}: duas ou mais etapas atrás</h4>
+        <p>A criança alcançou os marcos de ${a.alc<0?"antes da primeira etapa":ROTULOS[a.alc]}, e para ${textoIdade(corrigida)} espera-se os de ${ROTULOS[esperado]}.
+        Peça ao pediatra uma triagem do desenvolvimento e, se a preocupação continuar, um encaminhamento para especialista.</p>
+      </div>`);
+  });
+  analise.filter(a=>a.dif===-1).forEach(a=>{
+    algumAlerta=true;
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-atencao">
+        <h4>${a.area.nome}: marcos da idade ainda incompletos</h4>
+        <p>Faltam marcos de ${ROTULOS[esperado]}. Não é motivo para alarme por si só, mas é exatamente o tipo de detalhe que vale
+        levar anotado para a próxima consulta.</p>
+      </div>`);
+  });
+  if(desnivel>=2){
+    algumAlerta=true;
+    const alta=analise.reduce((x,y)=>y.alc>x.alc?y:x);
+    const baixa=analise.reduce((x,y)=>y.alc<x.alc?y:x);
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-atencao">
+        <h4>Desenvolvimento desigual entre as áreas</h4>
+        <p>${alta.area.nome} está bem à frente de ${baixa.area.nome}. Ir bem em uma área não compensa o atraso em outra —
+        e a diferença entre elas é uma informação clínica útil por si só. Mostre este perfil ao pediatra.</p>
+      </div>`);
+  }
+  const incertasTotal=analise.reduce((s,a)=>s+a.incertas,0);
+  if(incertasTotal>=3){
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-info">
+        <h4>Várias respostas foram “não sei dizer”</h4>
+        <p>Isso deixa o perfil menos confiável. Observe a criança nessas situações durante alguns dias e refaça o roteiro —
+        ou leve as próprias dúvidas para a consulta, que também são informação.</p>
+      </div>`);
+  }
+  if(estado.preocupa==="sim"){
+    algumAlerta=true;
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-atencao">
+        <h4>Você marcou que algo preocupa</h4>
+        <p>Sua preocupação basta como motivo para conversar com o pediatra, mesmo que todas as áreas apareçam no esperado.
+        Quem convive com a criança percebe coisas que nenhum roteiro cobre.</p>
+      </div>`);
+  }
+  // lembrete de triagem por idade
+  const janelas=[{m:9,t:"9 meses",extra:""},{m:18,t:"18 meses",extra:" e uma triagem de autismo"},{m:24,t:"2 anos",extra:" e uma triagem de autismo"},{m:30,t:"30 meses",extra:""}];
+  const janela=janelas.filter(j=>estado.meses>=j.m && estado.meses<j.m+3).pop();
+  if(janela){
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-info">
+        <h4>É hora de uma triagem do desenvolvimento</h4>
+        <p>Aos ${janela.t}, a recomendação é fazer uma triagem geral do desenvolvimento${janela.extra}, para todas as crianças.
+        Pergunte ao pediatra sobre isso nesta consulta.</p>
+      </div>`);
+  }
+  if(!algumAlerta){
+    c2.insertAdjacentHTML("beforeend",`
+      <div class="status s-ok">
+        <h4>Nada aqui pede pressa</h4>
+        <p>As respostas não apontaram marcos faltando para a idade nem sinais de alerta. Siga com as consultas de rotina
+        e refaça este roteiro na próxima faixa de idade.</p>
+      </div>`);
+  }
+  palco.appendChild(c2);
+
+  /* ---- detalhe por área ---- */
+  const c3=document.createElement("div");
+  c3.className="card aparece";
+  c3.innerHTML=`<h2>Área por área</h2>`;
+  analise.forEach(a=>{
+    const d=document.createElement("details");
+    d.innerHTML=`
+      <summary>${a.area.nome} <span class="tag ${a.tag}">${a.rotulo}</span></summary>
+      <p class="miudo" style="margin-top:10px">
+        Etapa completa mais avançada: <strong>${a.alc<0?"nenhuma":ROTULOS[a.alc]}</strong>${a.emergente?" — e a etapa seguinte já está começando":""}.
+        Esperado para ${textoIdade(corrigida)}: <strong>${esperado<0?"—":ROTULOS[esperado]}</strong>.
+      </p>
+      ${a.faltando.length? `<p style="margin:10px 0 0;font-size:14.5px"><strong>Marcos que ainda faltam para a idade:</strong></p>
+        <ul class="faltantes">${a.faltando.map(m=>`<li>${m}</li>`).join("")}</ul>`
+        : `<p style="margin:10px 0 0;font-size:14.5px">Nenhum marco pendente para esta idade nesta área.</p>`}
+    `;
+    c3.appendChild(d);
+  });
+  palco.appendChild(c3);
+
+  /* ---- próximos passos ---- */
+  const c4=document.createElement("div");
+  c4.className="card aparece";
+  c4.innerHTML=`
+    <h2>Leve isto para a consulta</h2>
+    <p>Perguntas que o pediatra costuma fazer e que vale ter pensado antes:</p>
+    <ul class="faltantes">
+      <li>O que vocês fazem juntos no dia a dia?</li>
+      <li>Do que a criança mais gosta de brincar?</li>
+      <li>Tem algo que ela faz, ou deixa de fazer, que preocupa você?</li>
+      <li>Ela perdeu alguma habilidade que já tinha?</li>
+      <li>Nasceu prematura ou tem alguma necessidade especial de saúde?</li>
+    </ul>
+    <h3>Se a preocupação continuar depois da conversa</h3>
+    <ul class="faltantes">
+      <li>Peça uma triagem do desenvolvimento com instrumento padronizado.</li>
+      <li>Peça encaminhamento para especialista que possa avaliar melhor a criança.</li>
+      <li>Procure serviços de estimulação e intervenção precoce da sua cidade ou estado.</li>
+    </ul>
+    <div class="status s-info" style="margin-top:18px">
+      <h4>Não espere para ver se melhora</h4>
+      <p>Agir cedo faz diferença. Os cinco primeiros anos são o período em que a intervenção tem maior efeito.</p>
+    </div>
+    <div class="acoes">
+      <button class="btn" onclick="window.print()">Imprimir ou salvar em PDF</button>
+      <button class="btn fantasma" id="refazer">Refazer do início</button>
+    </div>
+  `;
+  palco.appendChild(c4);
+  document.getElementById("refazer").onclick=()=>{
+    estado.tela="intro"; estado.areaAtual=0; estado.nivelAtual=0;
+    estado.meses=null; estado.prematuro=null; estado.semanasPrem=0; estado.perdeu=null; estado.preocupa=null;
+    AREAS.forEach(a=>estado.respostas[a.id]=[]);
+    render();
+  };
+}
+
+render();
+</script>
+</body>
+</html>
