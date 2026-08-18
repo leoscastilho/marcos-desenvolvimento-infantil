@@ -6,23 +6,35 @@
 <title>Marcos do Desenvolvimento Infantil — roteiro interativo de 2 meses a 5 anos</title>
 <style>
 :root{
-  --tinta:#241C4E;
-  --tinta-70:#5b5480;
-  --rio:#7BA7D7;
-  --rio-claro:#D8E7F5;
-  --coral:#E4576E;
-  --coral-claro:#FBE4E8;
-  --agua:#2E9E8F;
-  --agua-claro:#DDF0EC;
-  --ambar:#D98A21;
-  --ambar-claro:#FBEEDA;
-  --fundo:#F3F0F8;
+  /* papel e tinta */
+  --tinta:#241F35;
+  --tinta-70:#6B6480;
+  --tinta-40:#9C95AC;
+  --fundo:#FAF6F1;
   --papel:#FFFFFF;
-  --linha:#E3DEEF;
-  --display:Georgia,'Times New Roman',serif;
+  --linha:#EBE3DA;
+  --linha-forte:#DBD1C5;
+
+  /* semântica do resultado */
+  --agua:#1B8C7B;   --agua-claro:#DFF2EE;
+  --ambar:#C4801A;  --ambar-claro:#FAEEDB;
+  --coral:#D8455F;  --coral-claro:#FCE7EB;
+  --rio:#5C7CD1;    --rio-claro:#E4EAF9;
+
+  /* acento da tela (trocado por área) */
+  --ac:#5257C7; --ac-t:#4045A8; --ac-suave:#EFEFFC; --ac-linha:#DCDDF7;
+
+  --display:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
   --corpo:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --dado:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --raio:22px;
+  --sombra:0 1px 2px rgba(36,31,53,.04),0 18px 44px -30px rgba(36,31,53,.6);
 }
+body.area-social   {--ac:#C24E7A;--ac-t:#A33C64;--ac-suave:#FCEFF4;--ac-linha:#F2D9E3}
+body.area-linguagem{--ac:#B8651E;--ac-t:#9A5316;--ac-suave:#FDF2E6;--ac-linha:#F3DEC8}
+body.area-cognitivo{--ac:#5257C7;--ac-t:#4045A8;--ac-suave:#EFEFFC;--ac-linha:#DCDDF7}
+body.area-motor    {--ac:#17836F;--ac-t:#12695A;--ac-suave:#E6F4F0;--ac-linha:#CCE7DF}
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
@@ -33,124 +45,245 @@ body{
   line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:740px;margin:0 auto;padding:24px 18px 72px}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(130% 55% at 50% -12%, var(--ac-suave) 0%, rgba(0,0,0,0) 72%);
+  transition:background .55s ease;
+}
+.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:20px 18px 80px}
+p{margin:0 0 12px}
+.miudo{font-size:13.5px;color:var(--tinta-70)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 
-/* ---------- cabeçalho ---------- */
-header.topo{padding:28px 0 18px;text-align:center}
+/* ---------- cabeçalho da capa ---------- */
+header.topo{padding:34px 0 20px;text-align:center}
 .selo{
-  font-family:var(--dado);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-family:var(--dado);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--tinta-70);
 }
 h1{
-  font-family:var(--display);font-style:italic;font-weight:400;
-  font-size:clamp(30px,7vw,46px);line-height:1.05;margin:10px 0 6px;
+  font-family:var(--display);font-weight:400;
+  font-size:clamp(32px,7.4vw,52px);line-height:1.03;margin:12px 0 8px;letter-spacing:-.01em;
 }
-h1 em{font-style:italic;color:var(--coral)}
-.sub{max-width:44ch;margin:0 auto;color:var(--tinta-70);font-size:15px}
+h1 em{font-style:italic;color:var(--ac-t)}
+.sub{max-width:46ch;margin:0 auto;color:var(--tinta-70);font-size:15.5px}
 .fatos{
-  display:flex;justify-content:center;flex-wrap:wrap;gap:8px 14px;margin:16px 0 0;
+  display:flex;justify-content:center;flex-wrap:wrap;gap:8px 14px;margin:18px 0 0;
   font-family:var(--dado);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-70);
 }
 .fatos span{display:flex;align-items:center;gap:8px}
-.fatos span+span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--linha)}
+.fatos span+span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--linha-forte)}
 
 /* ---------- cartões ---------- */
 .card{
-  background:var(--papel);border:1px solid var(--linha);border-radius:18px;
-  padding:26px 22px;margin:18px 0;
-  box-shadow:0 1px 0 rgba(36,28,78,.04),0 12px 30px -24px rgba(36,28,78,.5);
+  background:var(--papel);border:1px solid var(--linha);border-radius:var(--raio);
+  padding:28px 24px;margin:18px 0;box-shadow:var(--sombra);
 }
-.card h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:25px;margin:0 0 10px}
-.card h3{font-size:15px;margin:22px 0 8px;letter-spacing:.01em}
-p{margin:0 0 12px}
-.miudo{font-size:13.5px;color:var(--tinta-70)}
+.card h2{font-family:var(--display);font-weight:400;font-size:27px;line-height:1.15;margin:0 0 12px}
+.card h3{font-size:15px;margin:24px 0 8px}
+.eyebrow{
+  font-family:var(--dado);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ac-t);margin-bottom:6px;
+}
 
 /* ---------- botões ---------- */
-button{font-family:inherit;font-size:inherit;cursor:pointer}
 .btn{
   display:inline-block;background:var(--tinta);color:#fff;border:0;border-radius:999px;
-  padding:14px 28px;font-weight:600;font-size:16px;transition:transform .12s ease,background .12s ease;
+  padding:14px 26px;font-weight:600;font-size:16px;
+  transition:transform .12s ease,background .12s ease,box-shadow .12s ease;
 }
-.btn:hover{background:#160f38}
+.btn:hover{background:#171233}
 .btn:active{transform:translateY(1px)}
-.btn.fantasma{background:transparent;color:var(--tinta);border:1.5px solid var(--linha)}
+.btn.acento{background:var(--ac);box-shadow:0 8px 20px -12px var(--ac)}
+.btn.acento:hover{background:var(--ac-t)}
+.btn.fantasma{background:transparent;color:var(--tinta);border:1.5px solid var(--linha-forte)}
 .btn.fantasma:hover{background:var(--fundo)}
 a.btn{text-decoration:none;display:inline-flex;align-items:center;gap:9px}
-a.btn:focus-visible{outline:3px solid var(--rio);outline-offset:2px}
-button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--rio);outline-offset:2px}
+.acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
 
-/* ---------- trilha de progresso ---------- */
-.trilha{display:flex;gap:6px;align-items:center;margin-bottom:22px;flex-wrap:wrap}
-.area-chip{
-  font-family:var(--dado);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
-  padding:5px 10px;border-radius:999px;border:1px solid var(--linha);color:var(--tinta-70);
-  background:var(--papel);
+/* ---------- capa: as quatro áreas ---------- */
+.areas-capa{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:6px 0 4px}
+.area-cartao{
+  border:1px solid var(--linha);border-left:4px solid var(--c);border-radius:14px;
+  padding:12px 14px;background:var(--papel);
 }
-.area-chip.ativa{background:var(--tinta);color:#fff;border-color:var(--tinta)}
-.area-chip.feita{background:var(--rio-claro);color:var(--tinta);border-color:var(--rio-claro)}
+.area-cartao b{display:block;font-size:14.5px;color:var(--c-t)}
+.area-cartao span{font-size:13px;color:var(--tinta-70);line-height:1.4;display:block;margin-top:2px}
+.passos{list-style:none;margin:0;padding:0;counter-reset:p}
+.passos li{
+  counter-increment:p;position:relative;padding:0 0 16px 42px;
+}
+.passos li::before{
+  content:counter(p);position:absolute;left:0;top:-1px;width:28px;height:28px;border-radius:50%;
+  background:var(--ac-suave);color:var(--ac-t);font-family:var(--dado);font-size:12.5px;
+  display:grid;place-items:center;font-weight:700;
+}
+.passos li:not(:last-child)::after{
+  content:"";position:absolute;left:13.5px;top:30px;bottom:4px;width:1.5px;background:var(--linha);
+}
+.passos b{display:block;font-size:15.5px;margin-bottom:1px}
+.passos span{font-size:14px;color:var(--tinta-70)}
 
-/* ---------- pergunta ---------- */
-.eyebrow{
-  font-family:var(--dado);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--coral);margin-bottom:4px;
+/* ---------- capa encolhe enquanto se responde ---------- */
+body.respondendo header.topo{padding:18px 0 2px}
+body.respondendo h1{
+  font-family:var(--dado);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--tinta-40);margin:0;line-height:1.4;
 }
-.etapa{font-family:var(--dado);font-size:12px;color:var(--tinta-70);letter-spacing:.08em}
-.enunciado{font-size:16px;margin:14px 0 4px;color:var(--tinta-70)}
-ul.marcos{list-style:none;margin:14px 0 24px;padding:0}
-ul.marcos li{
-  position:relative;padding:11px 0 11px 30px;border-top:1px solid var(--linha);font-size:16.5px;
+body.respondendo h1 em{color:var(--tinta-40);font-style:normal}
+body.respondendo .selo,
+body.respondendo .sub,
+body.respondendo .fatos,
+body.respondendo .rodape{display:none}
+body.resultado .sub,
+body.resultado .fatos{display:none}
+
+/* ---------- topo da etapa ---------- */
+.topo-etapa{
+  display:flex;align-items:center;gap:12px;margin:6px 0 16px;
 }
-ul.marcos li:last-child{border-bottom:1px solid var(--linha)}
-ul.marcos li::before{
-  content:"";position:absolute;left:6px;top:19px;width:9px;height:9px;border-radius:50%;
-  background:var(--rio);
+.voltar-seta{
+  flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--linha-forte);
+  background:var(--papel);color:var(--tinta-70);font-size:17px;line-height:1;
+  display:grid;place-items:center;transition:border-color .15s,color .15s;
 }
-.respostas{display:grid;gap:9px}
-.resp{
-  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-  background:var(--papel);border:1.5px solid var(--linha);border-radius:14px;
-  padding:14px 16px;font-weight:600;color:var(--tinta);transition:border-color .12s,background .12s;
+.voltar-seta:hover{border-color:var(--ac);color:var(--ac-t)}
+.voltar-seta[disabled]{opacity:.35;cursor:default}
+.trilha-areas{display:flex;gap:6px;flex:1;min-width:0}
+.j-area{
+  flex:1;min-width:0;border-radius:999px;height:8px;background:var(--linha);position:relative;overflow:hidden;
 }
-.resp:hover{border-color:var(--tinta);background:#FAF8FD}
-.resp .glifo{
-  font-family:var(--dado);font-size:12px;width:26px;height:26px;flex:0 0 26px;border-radius:50%;
-  display:grid;place-items:center;color:#fff;font-weight:700;
+.j-area i{position:absolute;inset:0;background:var(--c);transform:scaleX(0);transform-origin:left;
+  transition:transform .45s cubic-bezier(.3,.7,.3,1);border-radius:999px}
+.j-area.feita i{transform:scaleX(1)}
+.j-area.ativa i{transform:scaleX(var(--p,0))}
+.j-rot{
+  position:absolute;left:0;top:14px;font-family:var(--dado);font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--tinta-40);white-space:nowrap;
 }
-.resp[data-v="sim"] .glifo{background:var(--agua)}
-.resp[data-v="parcial"] .glifo{background:var(--rio)}
-.resp[data-v="nao"] .glifo{background:var(--coral)}
-.resp[data-v="naosei"] .glifo{background:var(--tinta-70)}
-.resp small{display:block;font-weight:400;font-size:13px;color:var(--tinta-70)}
-.voltar{background:none;border:0;color:var(--tinta-70);font-size:13.5px;padding:14px 0 0;text-decoration:underline}
+.j-area{position:relative;overflow:visible}
+.j-area i{border-radius:999px}
+.j-area.ativa .j-rot{color:var(--ac-t)}
+.anel-caixa{flex:0 0 auto;width:44px;height:44px;position:relative}
+.anel{width:44px;height:44px;display:block}
+.anel circle{fill:none;stroke-width:3.5}
+.anel .base{stroke:var(--linha)}
+.anel .cheio{stroke:var(--ac);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;
+  transition:stroke-dashoffset .45s cubic-bezier(.3,.7,.3,1)}
+.anel text{font-family:var(--dado);font-size:13px;font-weight:700;fill:var(--tinta)}
+
+/* ---------- cartão da etapa ---------- */
+.cartao-etapa{
+  position:relative;background:var(--papel);border:1px solid var(--linha);
+  border-radius:var(--raio);box-shadow:var(--sombra);padding:26px 22px 0;
+}
+.cartao-etapa::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--ac);opacity:.9;
+  border-radius:var(--raio) var(--raio) 0 0;
+}
+.marca-caixa{
+  position:absolute;inset:0;overflow:hidden;border-radius:var(--raio);pointer-events:none;
+}
+.marca-etapa{
+  position:absolute;right:10px;top:-30px;font-family:var(--display);font-size:150px;line-height:1;
+  color:var(--ac);opacity:.07;user-select:none;font-style:italic;
+}
+.etapa-area{
+  display:flex;align-items:center;gap:9px;margin:0 0 8px;
+  font-family:var(--dado);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac-t);
+}
+.etapa-area i{width:8px;height:8px;border-radius:50%;background:var(--ac);display:inline-block}
+.etapa-titulo{font-family:var(--display);font-weight:400;font-size:27px;line-height:1.15;margin:0 0 8px}
+.etapa-ajuda{font-size:14.5px;color:var(--tinta-70);margin:0 0 18px;max-width:64ch}
+
+ul.marcos{list-style:none;margin:0 0 10px;padding:0}
+li.marco{display:flex;align-items:stretch;gap:8px;margin-bottom:8px}
+.marco-toque{
+  flex:1;display:flex;align-items:flex-start;gap:13px;text-align:left;
+  background:var(--papel);border:1.5px solid var(--linha);border-radius:15px;
+  padding:14px 15px;color:var(--tinta);font-size:16px;line-height:1.4;
+  transition:border-color .15s,background .15s,transform .08s;
+}
+.marco-toque:hover{border-color:var(--ac-linha);background:var(--ac-suave)}
+.marco-toque:active{transform:scale(.995)}
+.caixa{
+  flex:0 0 24px;width:24px;height:24px;border-radius:8px;border:2px solid var(--linha-forte);
+  margin-top:1px;display:grid;place-items:center;transition:background .15s,border-color .15s;
+}
+.caixa svg{width:14px;height:14px;opacity:0;transform:scale(.6);transition:opacity .15s,transform .15s}
+.marco.faz .marco-toque{border-color:var(--ac);background:var(--ac-suave)}
+.marco.faz .caixa{background:var(--ac);border-color:var(--ac)}
+.marco.faz .caixa svg{opacity:1;transform:none}
+
+.rodape-etapa{
+  position:sticky;bottom:0;margin:0 -22px;padding:14px 22px;
+  padding-bottom:max(16px,env(safe-area-inset-bottom));
+  background:var(--papel);border-top:1px solid var(--linha);
+  border-radius:0 0 var(--raio) var(--raio);
+  box-shadow:0 -14px 18px -14px rgba(36,31,53,.22);
+  display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap;
+}
+.acoes-etapa{display:flex;gap:14px;align-items:center}
+.btn-txt{
+  background:none;border:0;color:var(--tinta-70);font-size:13.5px;text-decoration:underline;
+  text-underline-offset:3px;padding:10px 4px;
+}
+.btn-txt:hover{color:var(--ac-t)}
+@media (max-width:520px){
+  .cartao-etapa{padding:22px 16px 0}
+  .rodape-etapa{margin:0 -16px;padding:12px 16px 16px}
+  .marca-etapa{font-size:110px;top:-18px}
+  .etapa-titulo{font-size:23px}
+  .areas-capa{grid-template-columns:1fr}
+  .acoes-etapa{width:100%;justify-content:space-between}
+}
 
 /* ---------- formulário final ---------- */
-.campo{margin:0 0 18px}
-label{display:block;font-weight:600;font-size:15px;margin-bottom:7px}
+.campo{margin:0 0 20px}
+label{display:block;font-weight:600;font-size:15px;margin-bottom:8px}
 select,input[type=number]{
-  font-family:var(--corpo);font-size:16px;padding:11px 12px;border:1.5px solid var(--linha);
-  border-radius:12px;background:var(--papel);color:var(--tinta);
+  font-family:var(--corpo);font-size:16px;padding:12px 38px 12px 14px;border:1.5px solid var(--linha-forte);
+  border-radius:13px;background:var(--papel);color:var(--tinta);appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236B6480' stroke-width='2' stroke-linecap='round'/></svg>");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:12px;
 }
 .linha-campos{display:flex;gap:10px;flex-wrap:wrap}
 .opcoes{display:flex;gap:8px;flex-wrap:wrap}
 .opt{
-  border:1.5px solid var(--linha);background:var(--papel);border-radius:999px;padding:9px 18px;font-weight:600;
+  border:1.5px solid var(--linha-forte);background:var(--papel);border-radius:999px;
+  padding:10px 20px;font-weight:600;transition:background .15s,border-color .15s,color .15s;
 }
-.opt[aria-pressed="true"]{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.opt:hover{border-color:var(--ac-linha)}
+.opt[aria-pressed="true"]{background:var(--ac);color:#fff;border-color:var(--ac)}
 
-/* ---------- resultado: gráfico de trilhas ---------- */
+/* ---------- perguntas do fim ---------- */
+.q-final{display:flex;gap:14px;padding:20px 0;border-top:1px solid var(--linha)}
+.q-final:first-of-type{border-top:0}
+.q-n{
+  flex:0 0 26px;height:26px;border-radius:50%;background:var(--ac-suave);color:var(--ac-t);
+  font-family:var(--dado);font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:1px;
+}
+.q-corpo{flex:1;min-width:0}
+.q-corpo label{font-size:16px;margin-bottom:10px}
+.idade-destaque{background:var(--ac-suave);border-radius:14px;padding:10px;display:inline-flex}
+.idade-destaque select{border-color:transparent}
+
+/* ---------- resultado: trilhas ---------- */
 .grafico{margin:8px 0 6px}
 .faixa{margin:0 0 18px}
 .faixa-topo{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px}
 .faixa-nome{font-weight:700;font-size:15px}
 .faixa-valor{font-family:var(--dado);font-size:12px;color:var(--tinta-70)}
-.pista{position:relative;height:26px;background:var(--fundo);border-radius:999px;overflow:hidden}
+.pista-caixa{position:relative}
+.pista{position:relative;height:26px;background:var(--fundo);border-radius:999px;overflow:hidden;border:1px solid var(--linha)}
 .pista .preenche{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--rio)}
 .pista .preenche.ok{background:var(--agua)}
 .pista .preenche.atencao{background:var(--ambar)}
 .pista .preenche.alerta{background:var(--coral)}
-.marcador{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--tinta)}
+.marcador{position:absolute;top:-6px;bottom:-6px;width:2.5px;border-radius:2px;background:var(--tinta);transform:translateX(-1.25px)}
 .marcador::after{
-  content:"";position:absolute;top:-3px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--tinta);
+  content:"";position:absolute;top:-4px;left:-3px;width:9px;height:9px;border-radius:50%;background:var(--tinta);
 }
 .regua{display:flex;justify-content:space-between;font-family:var(--dado);font-size:10px;color:var(--tinta-70);margin-top:6px}
 .legenda{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--tinta-70);margin-top:14px}
@@ -167,11 +300,10 @@ select,input[type=number]{
   font-weight:600;font-size:14px;color:var(--tinta-70);
   transition:background .15s,color .15s,box-shadow .15s;
 }
-.aba[aria-selected="true"]{background:var(--papel);color:var(--tinta);box-shadow:0 1px 4px rgba(36,28,78,.16)}
+.aba[aria-selected="true"]{background:var(--papel);color:var(--tinta);box-shadow:0 1px 4px rgba(36,31,53,.16)}
 .palco-graficos{overflow:hidden;touch-action:pan-y;transition:height .32s ease}
 .faixa-graficos{display:flex;align-items:flex-start;transition:transform .32s cubic-bezier(.3,.7,.3,1)}
 .painel{flex:0 0 100%;width:100%;min-width:0}
-.dica-deslize{font-size:12px;color:var(--tinta-70);text-align:center;margin:12px 0 0}
 
 /* ---------- resultado: gráfico de teia ---------- */
 .teia{display:block;width:100%;max-width:470px;height:auto;margin:2px auto 0}
@@ -184,7 +316,7 @@ select,input[type=number]{
 }
 .teia .nome{font-size:13px;font-weight:700;fill:var(--tinta)}
 .teia .valor{font-size:11px;fill:var(--tinta-70);font-family:var(--dado)}
-.teia .ideal{fill:var(--rio);fill-opacity:.34;stroke:var(--rio);stroke-width:1.5;stroke-opacity:.6;stroke-linejoin:round}
+.teia .ideal{fill:var(--rio);fill-opacity:.28;stroke:var(--rio);stroke-width:1.5;stroke-opacity:.6;stroke-linejoin:round}
 .teia .real{fill:var(--tinta);fill-opacity:.14;stroke:var(--tinta);stroke-width:2.5;stroke-linejoin:round}
 .teia .emergente{fill:none;stroke:var(--tinta);stroke-width:2;stroke-dasharray:5 4;stroke-opacity:.8;stroke-linejoin:round}
 .teia .ponto{stroke:var(--papel);stroke-width:2}
@@ -204,27 +336,41 @@ select,input[type=number]{
   display:inline-block;font-family:var(--dado);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
   padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle;
 }
-.t-ok{background:var(--agua-claro);color:#1c6a5f}
+.t-ok{background:var(--agua-claro);color:#14675a}
 .t-atencao{background:var(--ambar-claro);color:#8a5610}
-.t-alerta{background:var(--coral-claro);color:#a52a40}
-.t-info{background:var(--rio-claro);color:#33587c}
+.t-alerta{background:var(--coral-claro);color:#a32741}
+.t-info{background:var(--rio-claro);color:#33507c}
 ul.faltantes{margin:8px 0 0;padding-left:20px;font-size:14.5px}
 ul.faltantes li{margin-bottom:5px}
 details{border-top:1px solid var(--linha);padding:12px 0}
 summary{cursor:pointer;font-weight:600;font-size:15px}
 .rodape{font-size:12.5px;color:var(--tinta-70);text-align:center;margin-top:28px;line-height:1.6}
-.acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
 .oculto{display:none !important}
-.aparece{animation:sobe .28s ease both}
-@keyframes sobe{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.aparece{animation:none}}
+.aparece{animation:sobe .3s ease both}
+@keyframes sobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.aparece{animation:none}*{transition-duration:.01ms !important}}
+
+/* em telas de toque, hover não deve “grudar” depois do toque */
+@media (hover:none){
+  .marco-toque:hover{border-color:var(--linha);background:var(--papel)}
+  .marco.faz .marco-toque:hover{border-color:var(--ac);background:var(--ac-suave)}
+  .opt:hover{border-color:var(--linha-forte)}
+  .opt[aria-pressed="true"]:hover{border-color:var(--ac)}
+  .btn:hover{background:var(--tinta)}
+  .btn.acento:hover{background:var(--ac)}
+  .btn.fantasma:hover{background:transparent}
+  .voltar-seta:hover{border-color:var(--linha-forte);color:var(--tinta-70)}
+  .btn-txt:hover{color:var(--tinta-70)}
+}
+
 /* ---------- folha de impressão (montada só na tela de resultado) ---------- */
 .so-impressao{display:none}
 
 @media print{
   @page{margin:10mm}
   body{background:#fff}
-  .acoes,.trilha,.abas,.dica-deslize{display:none}
+  body::before{display:none}
+  .acoes,.topo-etapa,.abas,.rodape-etapa{display:none}
   .card{box-shadow:none;break-inside:avoid}
   .palco-graficos{height:auto !important;overflow:visible}
   .faixa-graficos{display:block;transform:none !important}
@@ -246,14 +392,14 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
   .imp-titulo{font-family:var(--display);font-style:italic;font-size:18pt;line-height:1.05;margin:2px 0 0}
   .imp-meta{font-family:var(--dado);font-size:7.2pt;line-height:1.55;text-align:right;color:var(--tinta-70)}
   .imp-meta b{display:block;font-size:9pt;color:var(--tinta);letter-spacing:.04em}
-  .imp-resumo{font-size:9.6pt;margin:0 0 9px}
+  .imp-resumo{font-size:9.4pt;margin:0 0 8px}
 
   .imp-h{
     font-family:var(--dado);font-size:7pt;letter-spacing:.16em;text-transform:uppercase;font-weight:400;
-    color:var(--tinta-70);margin:0 0 7px;padding-bottom:4px;border-bottom:1px solid var(--linha);
+    color:var(--tinta-70);margin:0 0 6px;padding-bottom:3px;border-bottom:1px solid var(--linha);
   }
   .imp-secao{margin-bottom:6px}
-  .imp-cols{display:flex;gap:18px;align-items:flex-start;margin-bottom:11px}
+  .imp-cols{display:flex;gap:18px;align-items:flex-start;margin-bottom:9px}
   .imp-col-a{flex:0 0 43%}
   .imp-col-b{flex:1;min-width:0}
   .imp-cols .teia{max-width:none;width:100%;margin:0}
@@ -265,7 +411,7 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
     font-family:var(--dado);font-size:6.4pt;letter-spacing:.1em;text-transform:uppercase;
     color:var(--tinta-70);font-weight:400;text-align:left;padding:0 5px 4px 0;
   }
-  table.imp-tab td{padding:5.5px 5px 5.5px 0;border-top:1px solid var(--linha);font-size:8.8pt;vertical-align:middle}
+  table.imp-tab td{padding:4px 5px;padding-left:0;border-top:1px solid var(--linha);font-size:8.8pt;vertical-align:middle}
   table.imp-tab td.area{font-weight:700;font-size:9pt}
   table.imp-tab td:last-child,table.imp-tab th:last-child{padding-right:0;text-align:right}
   .imp-chip{
@@ -273,12 +419,12 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
     font-family:var(--dado);font-size:6.4pt;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
   }
 
-  .imp-aviso{border-left:3px solid;padding:1px 0 2px 9px;margin:0 0 8px;font-size:8.8pt;break-inside:avoid}
-  .imp-aviso b{display:block;font-size:9.2pt}
+  .imp-aviso{border-left:3px solid;padding:1px 0 2px 8px;margin:0 0 4px;font-size:8.6pt;line-height:1.3;break-inside:avoid}
+  .imp-aviso b{display:block;font-size:9pt}
   .imp-aviso span{color:var(--tinta-70)}
 
-  .imp-faltas{columns:2;column-gap:20px;font-size:8.2pt;line-height:1.32}
-  .imp-falta{break-inside:avoid;margin:0 0 8px}
+  .imp-faltas{columns:2;column-gap:20px;font-size:8.1pt;line-height:1.26}
+  .imp-falta{break-inside:avoid;margin:0 0 7px}
   .imp-falta b{display:block;font-size:8.7pt;margin-bottom:2px}
   .imp-falta ul{margin:0;padding-left:13px}
   .imp-falta li{margin-bottom:1px}
@@ -287,7 +433,7 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
   .imp-notas{border:1px solid var(--linha);border-radius:6px;padding:6px 10px 1px;break-inside:avoid}
   .imp-notas .risco{border-bottom:1px solid var(--linha);height:7mm}
   .imp-rodape{
-    margin-top:7px;padding-top:5px;border-top:1px solid var(--linha);
+    break-inside:avoid;margin-top:7px;padding-top:5px;border-top:1px solid var(--linha);
     font-size:7pt;line-height:1.42;color:var(--tinta-70);
   }
 }
@@ -301,7 +447,7 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
   <h1>Marcos do <em>Desenvolvimento Infantil</em></h1>
   <p class="sub">Roteiro interativo de 2 meses a 5 anos: você responde área por área, informa a idade no fim e recebe um perfil para levar à consulta com o pediatra.</p>
   <div class="fatos">
-    <span>4 áreas</span><span>159 marcos</span><span>5 a 10 minutos</span><span>nada é salvo</span>
+    <span>4 áreas</span><span>159 marcos</span><span>5 a 10 minutos</span>
   </div>
 </header>
 
@@ -400,30 +546,50 @@ const AREAS = [
 }
 ];
 
-const OPCOES = [
-  {v:"sim",     g:"S", t:"Já faz",            d:"Faz tudo o que está na lista, sem ajuda especial"},
-  {v:"parcial", g:"P", t:"Faz em parte",      d:"Faz alguns itens da lista, outros ainda não"},
-  {v:"nao",     g:"N", t:"Ainda não faz",     d:"Nenhum item da lista, ou quase nenhum"},
-  {v:"naosei",  g:"?", t:"Não sei dizer",     d:"Nunca observei ou tenho dúvida"}
-];
-
 /* ============================================================
    ESTADO
    ============================================================ */
+/* cor de cada área — a tela inteira muda de tom conforme o percurso */
+const CORES_AREA={
+  social:    {c:"#C24E7A", t:"#A33C64"},
+  linguagem: {c:"#B8651E", t:"#9A5316"},
+  cognitivo: {c:"#5257C7", t:"#4045A8"},
+  motor:     {c:"#17836F", t:"#12695A"}
+};
+
 const estado = {
   tela:"intro",
   areaAtual:0,
   nivelAtual:0,
-  respostas:{},      // id da área -> array de respostas
+  respostas:{},      // id da área -> array de respostas derivadas por etapa
+  marcas:{},         // id da área -> etapa -> array de "faz" | null
   meses:null,
   prematuro:null,
   semanasPrem:0,
   perdeu:null,
   preocupa:null
 };
-AREAS.forEach(a=>estado.respostas[a.id]=[]);
+function zeraRespostas(){
+  AREAS.forEach(a=>{ estado.respostas[a.id]=[]; estado.marcas[a.id]=[]; });
+}
+zeraRespostas();
 
 const palco = document.getElementById("palco");
+let atalhos=null;   // handler de teclado da tela de perguntas
+
+/* marcas de uma etapa, criadas sob demanda */
+function marcasDe(area,nivel){
+  const m=estado.marcas[area.id];
+  if(!m[nivel]) m[nivel]=area.niveis[nivel].map(()=>null);
+  return m[nivel];
+}
+/* a resposta da etapa é deduzida do que foi marcado item a item */
+function derivar(marcas){
+  const faz=marcas.filter(m=>m==="faz").length;
+  if(faz===marcas.length) return "sim";
+  if(faz>0) return "parcial";
+  return "nao";
+}
 
 /* ============================================================
    LÓGICA DA ESCADA
@@ -471,7 +637,10 @@ function render(){
   palco.innerHTML="";
   const folha=document.getElementById("impressao");
   if(folha) folha.remove();
-  document.body.classList.remove("tem-impressao");
+  if(atalhos){ document.removeEventListener("keydown",atalhos); atalhos=null; }
+  document.body.className = estado.tela==="perguntas"
+    ? "respondendo area-"+AREAS[estado.areaAtual].id
+    : (estado.tela==="resultado" ? "resultado" : "");
   if(estado.tela==="intro") telaIntro();
   else if(estado.tela==="perguntas") telaPergunta();
   else if(estado.tela==="final") telaFinal();
@@ -483,21 +652,35 @@ function telaIntro(){
   const c=document.createElement("div");
   c.className="card aparece";
   c.innerHTML=`
-    <h2>Como funciona</h2>
-    <p>Você vai percorrer quatro áreas do desenvolvimento. Em cada uma, as etapas ficam mais avançadas
-    conforme você avança — e a idade correspondente a cada etapa fica escondida de propósito, para que a resposta
-    venha da observação, não da expectativa.</p>
-    <p>A área termina quando a criança deixa de acompanhar duas etapas seguidas. Só no fim você informa a idade real,
-    e aí a página monta o perfil comparando o que a criança faz com o que se espera para essa idade.</p>
-    <h3>Antes de começar</h3>
-    <p class="miudo">Responda pensando no que a criança faz <strong>hoje, sozinha e com frequência</strong> — não no que
-    ela fez uma vez ou no que faz só com muita ajuda. Leva de 5 a 10 minutos. Nada é salvo: ao fechar a página, tudo se perde.</p>
-    <div class="status s-info" style="margin-top:18px">
+    <div class="eyebrow">O percurso</div>
+    <h2>Quatro áreas, uma escada em cada</h2>
+    <ol class="passos" style="margin-top:16px">
+      <li>
+        <b>Marque o que a criança já faz</b>
+        <span>Cada etapa traz alguns marcos. Toque nos que ela faz hoje, sozinha e com frequência.</span>
+      </li>
+      <li>
+        <b>Percorra as quatro áreas</b>
+        <span>Em cada uma, as etapas vão ficando mais avançadas e a área termina quando a criança deixa de acompanhá-las.</span>
+      </li>
+      <li>
+        <b>Informe a idade no fim</b>
+        <span>A página compara o que ela faz com o esperado para a idade e monta um perfil para levar à consulta.</span>
+      </li>
+    </ol>
+    <div class="areas-capa" style="margin-top:6px">
+      ${AREAS.map(a=>`
+        <div class="area-cartao" style="--c:${CORES_AREA[a.id].c};--c-t:${CORES_AREA[a.id].t}">
+          <b>${a.nome}</b><span>${(s=>s.charAt(0).toUpperCase()+s.slice(1))(a.intro.replace(/^Como a criança /,""))}</span>
+        </div>`).join("")}
+    </div>
+    <p class="miudo" style="margin-top:18px">Leva de 5 a 10 minutos.</p>
+    <div class="status s-info" style="margin-top:14px">
       <h4>Isto não substitui a consulta</h4>
       <p>Os marcos mostram o que a maioria das crianças (75% ou mais) faz em cada idade. Esta página organiza suas
       observações, mas não é triagem validada nem diagnóstico. Quem avalia o desenvolvimento é o pediatra.</p>
     </div>
-    <div class="acoes"><button class="btn" id="comecar">Começar pela primeira área</button></div>
+    <div class="acoes"><button class="btn acento" id="comecar" style="background:${CORES_AREA.social.c}">Começar por Social e Emocional</button></div>
   `;
   palco.appendChild(c);
 
@@ -509,8 +692,7 @@ function telaIntro(){
     <p>Os 159 marcos são os da cartilha <strong>“Aprenda os Sinais. Aja cedo.”</strong>, tradução brasileira do programa
     <em>Learn the Signs. Act Early.</em> do CDC, feita pela Sociedade Brasileira de Pediatria com a Sociedade Paraibana de
     Pediatria. Ela cobre 12 faixas de idade, de 2 meses a 5 anos, e reúne o que a maioria das crianças (75% ou mais) já faz
-    em cada uma delas. Aqui os marcos viraram perguntas e a ordem foi invertida — na cartilha, você lê direto a página da
-    idade da criança.</p>
+    em cada uma delas.</p>
     <div class="acoes">
       <a class="btn" href="${LINK_CARTILHA}" target="_blank" rel="noopener">Baixar a cartilha em PDF</a>
       <a class="btn fantasma" href="https://www.sbp.com.br" target="_blank" rel="noopener">Site da SBP</a>
@@ -523,49 +705,112 @@ function telaIntro(){
   document.getElementById("comecar").onclick=()=>{estado.tela="perguntas";render();};
 }
 
+const VISTO=`<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.2L13 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
 function telaPergunta(){
   const area=AREAS[estado.areaAtual];
   const nivel=estado.nivelAtual;
   const itens=area.niveis[nivel];
+  const marcas=marcasDe(area,nivel);
+  const podeVoltar=estado.areaAtual>0||nivel>0;
 
-  const trilha=document.createElement("div");
-  trilha.className="trilha";
-  AREAS.forEach((a,i)=>{
-    const chip=document.createElement("span");
-    chip.className="area-chip"+(i===estado.areaAtual?" ativa":(i<estado.areaAtual?" feita":""));
-    chip.textContent=a.curto;
-    trilha.appendChild(chip);
-  });
-  palco.appendChild(trilha);
-
-  const c=document.createElement("div");
-  c.className="card aparece";
-  c.innerHTML=`
-    <div class="eyebrow">${area.nome}</div>
-    <div class="etapa">Etapa ${nivel+1}</div>
-    <p class="enunciado">${nivel===0?area.intro+"<br>":""}A criança já faz o seguinte?</p>
-    <ul class="marcos">${itens.map(i=>`<li>${i}</li>`).join("")}</ul>
-    <div class="respostas">
-      ${OPCOES.map(o=>`
-        <button class="resp" data-v="${o.v}">
-          <span class="glifo">${o.g}</span>
-          <span>${o.t}<small>${o.d}</small></span>
-        </button>`).join("")}
+  /* ---- topo: voltar, percurso das áreas, anel da etapa ---- */
+  const C=2*Math.PI*18;
+  const topo=document.createElement("header");
+  topo.className="topo-etapa";
+  topo.innerHTML=`
+    <button class="voltar-seta" id="voltar" ${podeVoltar?"":"disabled"} aria-label="Voltar uma etapa">←</button>
+    <div class="trilha-areas">
+      ${AREAS.map((a,i)=>{
+        const r=estado.respostas[a.id].length;
+        const cls=i<estado.areaAtual?"feita":(i===estado.areaAtual?"ativa":"");
+        const p=i===estado.areaAtual?Math.max(.08,(nivel)/IDADES.length):0;
+        return `<span class="j-area ${cls}" style="--c:${CORES_AREA[a.id].c};--p:${p.toFixed(2)}" title="${a.nome}">
+          <i></i>${i===estado.areaAtual?`<em class="j-rot">${a.curto}</em>`:""}
+        </span>`;
+      }).join("")}
     </div>
-    ${(estado.areaAtual>0||nivel>0)?'<button class="voltar" id="voltar">Voltar uma etapa</button>':''}
+    <div class="anel-caixa">
+      <svg class="anel" viewBox="0 0 44 44" role="img" aria-label="Etapa ${nivel+1} de até ${IDADES.length}">
+        <circle class="base" cx="22" cy="22" r="18"></circle>
+        <circle class="cheio" cx="22" cy="22" r="18"
+          stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-(nivel+1)/IDADES.length)).toFixed(1)}"></circle>
+        <text x="22" y="26.5" text-anchor="middle">${nivel+1}</text>
+      </svg>
+    </div>
+  `;
+  palco.appendChild(topo);
+
+  /* ---- cartão da etapa ---- */
+  const c=document.createElement("article");
+  c.className="cartao-etapa aparece";
+  c.innerHTML=`
+    <div class="marca-caixa" aria-hidden="true"><div class="marca-etapa">${nivel+1}</div></div>
+    <p class="etapa-area"><i></i>${area.nome}</p>
+    <h2 class="etapa-titulo">${area.intro}</h2>
+    <p class="etapa-ajuda">Marque o que a criança faz <strong>hoje, sozinha e com frequência</strong>.</p>
+
+    <ul class="marcos">
+      ${itens.map((txt,i)=>`
+        <li class="marco" data-i="${i}">
+          <button class="marco-toque" aria-pressed="false">
+            <span class="caixa">${VISTO}</span>
+            <span class="txt">${txt}</span>
+          </button>
+        </li>`).join("")}
+    </ul>
+
+    <div class="rodape-etapa">
+      <div class="acoes-etapa">
+        <button class="btn-txt" id="todos">Marcar todos</button>
+        <button class="btn acento" id="continuar">Continuar</button>
+      </div>
+    </div>
   `;
   palco.appendChild(c);
 
-  c.querySelectorAll(".resp").forEach(b=>{
-    b.onclick=()=>responder(b.dataset.v);
+  const linhas=Array.from(c.querySelectorAll("li.marco"));
+
+  function pinta(){
+    linhas.forEach((li,i)=>{
+      const m=marcas[i];
+      li.classList.toggle("faz",m==="faz");
+      li.querySelector(".marco-toque").setAttribute("aria-pressed",m==="faz"?"true":"false");
+    });
+    const feitos=marcas.filter(m=>m==="faz").length;
+    document.getElementById("todos").textContent=feitos===itens.length?"Limpar":"Marcar todos";
+  }
+  function alterna(i){
+    marcas[i]=marcas[i]==="faz"?null:"faz";
+    pinta();
+  }
+  linhas.forEach((li,i)=>{
+    li.querySelector(".marco-toque").onclick=()=>alterna(i);
   });
+  document.getElementById("todos").onclick=()=>{
+    const cheio=marcas.every(m=>m==="faz");
+    for(let i=0;i<marcas.length;i++) marcas[i]=cheio?null:"faz";
+    pinta();
+  };
+  document.getElementById("continuar").onclick=()=>confirmarEtapa(marcas);
   const v=document.getElementById("voltar");
-  if(v) v.onclick=voltar;
+  if(podeVoltar) v.onclick=voltar;
+
+  atalhos=e=>{
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    if(e.key==="Enter"){ e.preventDefault(); confirmarEtapa(marcas); return; }
+    if(e.key==="ArrowLeft"&&podeVoltar){ e.preventDefault(); voltar(); return; }
+    const n=parseInt(e.key,10);
+    if(n>=1&&n<=itens.length){ e.preventDefault(); alterna(n-1); }
+  };
+  document.addEventListener("keydown",atalhos);
+
+  pinta();
 }
 
-function responder(valor){
+function confirmarEtapa(marcas){
   const area=AREAS[estado.areaAtual];
-  estado.respostas[area.id].push(valor);
+  estado.respostas[area.id].push(derivar(marcas));
   if(deveParar(estado.respostas[area.id])){
     if(estado.areaAtual<AREAS.length-1){
       estado.areaAtual++;
@@ -594,52 +839,76 @@ function voltar(){
 }
 
 function telaFinal(){
+  const feito=document.createElement("header");
+  feito.className="topo-etapa";
+  feito.innerHTML=`
+    <span class="voltar-seta" aria-hidden="true" style="border-color:var(--linha);color:var(--tinta-40)">✓</span>
+    <div class="trilha-areas">
+      ${AREAS.map(a=>`<span class="j-area feita" style="--c:${CORES_AREA[a.id].c}" title="${a.nome}"><i></i></span>`).join("")}
+    </div>
+    <span class="miudo" style="font-family:var(--dado);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase">4 de 4</span>
+  `;
+  palco.appendChild(feito);
+
   const c=document.createElement("div");
   c.className="card aparece";
   c.innerHTML=`
     <div class="eyebrow">Última parte</div>
     <h2>Agora sim: a idade da criança</h2>
-    <p class="miudo">Com a idade real, a página compara o que você respondeu com os marcos esperados para esse momento.</p>
+    <p class="miudo" style="max-width:56ch">As quatro áreas estão respondidas. Com a idade real, a página compara o que
+    você observou com os marcos esperados para esse momento.</p>
 
-    <div class="campo">
-      <label for="anos">Idade hoje</label>
-      <div class="linha-campos">
-        <select id="anos"></select>
-        <select id="meses"></select>
+    <div class="q-final">
+      <span class="q-n">1</span>
+      <div class="q-corpo">
+        <label for="anos">Que idade a criança tem hoje?</label>
+        <div class="linha-campos idade-destaque">
+          <select id="anos"></select>
+          <select id="meses"></select>
+        </div>
       </div>
     </div>
 
-    <div class="campo">
-      <label>Nasceu prematura, antes de 37 semanas?</label>
-      <div class="opcoes" id="prem">
-        <button class="opt" data-v="nao" aria-pressed="false">Não</button>
-        <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
-      </div>
-      <div id="semanas-bloco" class="oculto" style="margin-top:12px">
-        <label for="semanas">Com quantas semanas de gestação nasceu?</label>
-        <select id="semanas"></select>
-        <p class="miudo" style="margin-top:6px">Até os 2 anos, o esperado é comparar pela idade corrigida.</p>
-      </div>
-    </div>
-
-    <div class="campo">
-      <label>A criança perdeu alguma habilidade que já tinha?</label>
-      <div class="opcoes" id="perdeu">
-        <button class="opt" data-v="nao" aria-pressed="false">Não</button>
-        <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+    <div class="q-final">
+      <span class="q-n">2</span>
+      <div class="q-corpo">
+        <label>Nasceu prematura, antes de 37 semanas?</label>
+        <div class="opcoes" id="prem">
+          <button class="opt" data-v="nao" aria-pressed="false">Não</button>
+          <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+        </div>
+        <div id="semanas-bloco" class="oculto" style="margin-top:14px">
+          <label for="semanas">Com quantas semanas de gestação nasceu?</label>
+          <select id="semanas"></select>
+          <p class="miudo" style="margin-top:6px">Até os 2 anos, o esperado é comparar pela idade corrigida.</p>
+        </div>
       </div>
     </div>
 
-    <div class="campo">
-      <label>Existe algo que a criança faz, ou deixa de fazer, que preocupa você?</label>
-      <div class="opcoes" id="preocupa">
-        <button class="opt" data-v="nao" aria-pressed="false">Não</button>
-        <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+    <div class="q-final">
+      <span class="q-n">3</span>
+      <div class="q-corpo">
+        <label>A criança perdeu alguma habilidade que já tinha?</label>
+        <div class="opcoes" id="perdeu">
+          <button class="opt" data-v="nao" aria-pressed="false">Não</button>
+          <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-final">
+      <span class="q-n">4</span>
+      <div class="q-corpo">
+        <label>Existe algo que a criança faz, ou deixa de fazer, que preocupa você?</label>
+        <div class="opcoes" id="preocupa">
+          <button class="opt" data-v="nao" aria-pressed="false">Não</button>
+          <button class="opt" data-v="sim" aria-pressed="false">Sim</button>
+        </div>
       </div>
     </div>
 
     <div class="acoes">
-      <button class="btn" id="ver">Ver o perfil de desenvolvimento</button>
+      <button class="btn acento" id="ver">Ver o perfil de desenvolvimento</button>
       <button class="btn fantasma" id="voltar2">Voltar uma etapa</button>
     </div>
     <p class="miudo" id="aviso" style="margin-top:12px"></p>
@@ -809,12 +1078,13 @@ function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
 
   const faltas=analise.map(a=>{
     if(!a.faltando.length) return "";
-    const daIdade=a.alc<esperado?a.area.niveis[esperado]:[];
-    const anteriores=a.faltando.length-daIdade.length;
+    /* teto de 3 itens por área: mantém a folha em uma página */
+    const mostra=a.faltandoIdade.slice(0,3);
+    const restantes=a.faltando.length-mostra.length;
     return `<div class="imp-falta">
       <b>${a.area.nome}</b>
-      ${daIdade.length?`<ul>${daIdade.map(m=>`<li>${m}</li>`).join("")}</ul>`:""}
-      ${anteriores>0?`<div class="mais">+ ${anteriores} marco${anteriores>1?"s":""} de etapas anteriores</div>`:""}
+      ${mostra.length?`<ul>${mostra.map(m=>`<li>${m}</li>`).join("")}</ul>`:""}
+      ${restantes>0?`<div class="mais">+ ${restantes} marco${restantes>1?"s":""} — lista completa na tela</div>`:""}
     </div>`;
   }).join("");
 
@@ -868,10 +1138,9 @@ function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
     </div>`:""}
 
     <div class="imp-rodape">
-      Perfil montado a partir das observações de quem convive com a criança, sem armazenamento de dados.
-      <strong>Não é exame, triagem validada nem diagnóstico</strong> — serve para organizar a conversa com o pediatra.
-      Marcos adaptados da cartilha “Aprenda os Sinais. Aja cedo.” — CDC, traduzida e distribuída pela Sociedade Brasileira
-      de Pediatria e pela Sociedade Paraibana de Pediatria. Cartilha completa: sbp.com.br.
+      <strong>Não é exame, triagem validada nem diagnóstico</strong> — organiza as observações de quem convive com a criança
+      para a conversa com o pediatra. Marcos da cartilha “Aprenda os Sinais. Aja cedo.” — CDC, traduzida pela SBP com a
+      Sociedade Paraibana de Pediatria · sbp.com.br
     </div>
   `;
   document.querySelector(".wrap").appendChild(s);
@@ -952,13 +1221,22 @@ function telaResultado(){
     else if(dif===0){ classe="ok"; rotulo="Compatível com a idade"; tag="t-ok"; }
     else if(dif===-1){ classe="atencao"; rotulo="Marcos da idade incompletos"; tag="t-atencao"; }
     else { classe="alerta"; rotulo="Distância importante"; tag="t-alerta"; }
-    const incertas=r.filter(x=>x==="naosei").length;
-    // marcos que faltam: das etapas acima da alcançada até a esperada
-    const faltando=[];
-    for(let i=alc+1;i<=esperado && i<total;i++){
-      area.niveis[i].forEach(m=>faltando.push(m));
+    const marcasArea=estado.marcas[area.id]||[];
+    /* marcos que faltam até a etapa esperada — nas etapas respondidas,
+       exatamente os que não foram marcados; nas não respondidas, todos */
+    const faltando=[], faltandoIdade=[];
+    for(let i=0;i<=esperado && i<total;i++){
+      const respondida=i<r.length;
+      const m=marcasArea[i];
+      area.niveis[i].forEach((txt,j)=>{
+        const pendente = respondida ? (!m || m[j]!=="faz") : true;
+        if(pendente){
+          faltando.push(txt);
+          if(i===esperado) faltandoIdade.push(txt);
+        }
+      });
     }
-    return {area,r,alc,dif,classe,rotulo,tag,incertas,faltando,emergente:temEmergente(r)};
+    return {area,r,alc,dif,classe,rotulo,tag,faltando,faltandoIdade,emergente:temEmergente(r)};
   });
 
   const indices=analise.map(a=>a.alc);
@@ -1015,7 +1293,6 @@ function telaResultado(){
 
       </div>
     </div>
-    <p class="dica-deslize">Deslize para o lado ou toque nas abas para trocar de gráfico.</p>
   `;
   palco.appendChild(c1);
 
@@ -1030,9 +1307,11 @@ function telaResultado(){
         <span class="faixa-nome">${a.area.nome}</span>
         <span class="faixa-valor">${a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc]}${a.emergente?" +":""}</span>
       </div>
-      <div class="pista">
-        <div class="preenche ${a.classe}" style="width:${Math.max(larg,0)}%"></div>
-        <div class="marcador" style="left:${marc}%"></div>
+      <div class="pista-caixa">
+        <div class="pista">
+          <div class="preenche ${a.classe}" style="width:${Math.max(larg,0)}%"></div>
+        </div>
+        <div class="marcador" style="left:${Math.min(99.5,Math.max(.5,marc)).toFixed(2)}%"></div>
       </div>
     `;
     g.appendChild(el);
@@ -1069,13 +1348,6 @@ function telaResultado(){
       t:"Desenvolvimento desigual entre as áreas",
       longo:`${alta.area.nome} está bem à frente de ${baixa.area.nome}. Ir bem em uma área não compensa o atraso em outra — e a diferença entre elas é uma informação clínica útil por si só. Mostre este perfil ao pediatra.`,
       curto:`${alta.area.curto} está bem à frente de ${baixa.area.curto}. A distância entre as áreas é informação clínica por si só.`});
-  }
-  const incertasTotal=analise.reduce((s,a)=>s+a.incertas,0);
-  if(incertasTotal>=3){
-    avisos.push({n:"info",peso:false,
-      t:"Várias respostas foram “não sei dizer”",
-      longo:"Isso deixa o perfil menos confiável. Observe a criança nessas situações durante alguns dias e refaça o roteiro — ou leve as próprias dúvidas para a consulta, que também são informação.",
-      curto:`${incertasTotal} respostas de “não sei dizer” — o perfil ficou menos confiável nesses pontos.`});
   }
   if(estado.preocupa==="sim"){
     avisos.push({n:"atencao",peso:true,
@@ -1154,20 +1426,11 @@ function telaResultado(){
       <p>Agir cedo faz diferença. Os cinco primeiros anos são o período em que a intervenção tem maior efeito.</p>
     </div>
     <div class="acoes">
-      <button class="btn" onclick="window.print()">Imprimir ou salvar em PDF</button>
-      <button class="btn fantasma" id="refazer">Refazer do início</button>
+      <button class="btn acento" onclick="window.print()">Imprimir ou salvar em PDF</button>
     </div>
-    <p class="miudo" style="margin-top:12px">A impressão sai resumida: uma folha com o gráfico de teia, a situação de
-    cada área, os alertas, os marcos que faltam para a idade e espaço para anotar na consulta.</p>
   `;
   palco.appendChild(c4);
   montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto);
-  document.getElementById("refazer").onclick=()=>{
-    estado.tela="intro"; estado.areaAtual=0; estado.nivelAtual=0;
-    estado.meses=null; estado.prematuro=null; estado.semanasPrem=0; estado.perdeu=null; estado.preocupa=null;
-    AREAS.forEach(a=>estado.respostas[a.id]=[]);
-    render();
-  };
 }
 
 render();

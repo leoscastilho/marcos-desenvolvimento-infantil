@@ -35,20 +35,27 @@ Cada área tem **12 etapas** em ordem crescente, correspondendo às faixas da ca
 
 As etapas sobem sempre. Você começa pelos marcos mais elementares da área e avança. Como as idades ficam ocultas, não há como "pular para o nível certo": para chegar aos marcos de 3 anos é preciso ter confirmado os de 2 anos e 30 meses antes.
 
-Cada etapa aceita quatro respostas:
+Você não escolhe uma resposta para a etapa inteira: **marca marco a marco**. Cada item da lista é um botão — toque nele se a criança faz aquilo hoje, sozinha e com frequência. Não há "não sei": marcar significa certeza, e o que ficar sem marcar conta como ainda não.
 
-- **Já faz** — faz tudo o que está na lista, sozinha e com frequência
-- **Faz em parte** — faz alguns itens, outros ainda não
-- **Ainda não faz** — nenhum item, ou quase nenhum
-- **Não sei dizer** — nunca observou ou tem dúvida
+A resposta da etapa é deduzida do que foi marcado:
+
+| O que você marcou | Como fica a etapa |
+|---|---|
+| Todos os marcos | **Já faz** |
+| Alguns | **Faz em parte** |
+| Nenhum | **Ainda não faz** |
 
 Só **Já faz** conta como etapa alcançada. *Faz em parte* aparece no resultado como etapa emergente (marcada com `+`), mas não é creditada.
+
+Marcar item a item custa alguns toques a mais e paga em precisão: a página passa a saber **exatamente quais marcos faltam**, em vez de deduzir pela etapa. No resultado, a lista de marcos pendentes é a lista real do que não foi marcado — inclusive dentro de etapas que a criança já cumpre em parte.
+
+"Marcar todos" resolve de uma vez a etapa em que a criança faz tudo. Há atalhos de teclado — **1–9** marcam os itens, **Enter** continua, **←** volta uma etapa —, mas eles não aparecem escritos na tela.
 
 ### 2. Onde a escada para
 
 A área termina quando aparecem **duas respostas seguidas** que não sejam "Já faz". A regra é deliberada: um tropeço isolado não encerra a área. Uma criança que ainda não faz nada de uma etapa mas faz tudo da seguinte continua subindo, e o crédito vai para a etapa mais alta confirmada.
 
-Na prática, cada área custa entre 3 e 12 perguntas. Para uma criança de 2 anos, o roteiro inteiro fica em torno de 40 perguntas — de 5 a 10 minutos.
+Na prática, cada área custa entre 3 e 12 etapas. Para uma criança de 2 anos, o roteiro inteiro fica em torno de 40 etapas — de 5 a 10 minutos.
 
 ### 3. As perguntas do fim
 
@@ -63,7 +70,7 @@ Só depois das quatro áreas a página pede:
 
 O perfil aparece em duas visualizações, na mesma posição da página, alternadas por abas ou deslizando o dedo para o lado (no teclado, setas ← →):
 
-**Trilhas por área.** Quatro pistas, uma por área, preenchidas até a etapa alcançada, com um marcador vertical na etapa esperada para a idade:
+**Trilhas por área.** Quatro pistas, uma por área, preenchidas até a etapa alcançada, com um marcador vertical na etapa esperada para a idade — desenhado fora da pista, para continuar visível nos extremos (2 meses e 5 anos):
 
 - **Verde** — no esperado ou acima
 - **Âmbar** — uma etapa atrás
@@ -83,8 +90,7 @@ Abaixo do gráfico vêm os alertas, nesta ordem de peso:
 2. **Áreas duas ou mais etapas atrás** — sugere pedir triagem do desenvolvimento e, se a preocupação persistir, encaminhamento
 3. **Áreas com os marcos da idade incompletos** — não é alarme, é anotação para a próxima consulta
 4. **Desenvolvimento desigual** — quando a diferença entre a área mais avançada e a mais atrasada chega a duas etapas. Estar à frente em uma área não compensa o atraso em outra, e a distância entre elas é informação clínica por si só
-5. **Excesso de "não sei dizer"** — indica que o perfil ficou menos confiável e vale reobservar
-6. **Janela de triagem recomendada** — lembrete aos 9, 18, 24 e 30 meses (com triagem de autismo aos 18 meses e 2 anos)
+5. **Janela de triagem recomendada** — lembrete aos 9, 18, 24 e 30 meses (com triagem de autismo aos 18 meses e 2 anos)
 
 Cada área traz ainda a lista exata dos marcos que faltam para a idade.
 
@@ -97,10 +103,29 @@ Imprimir não imprime a página: o botão gera uma folha própria, montada para 
 - O **gráfico de teia** e, abaixo dele, um quadro em branco para anotações durante a consulta
 - Uma tabela com a etapa completa e a situação de cada área
 - Os alertas reduzidos a uma linha cada — os mesmos da tela, em versão curta
-- Os **marcos da idade que ainda faltam**, área por área, em duas colunas; os marcos de etapas anteriores entram só como contagem ("+ 17 marcos de etapas anteriores"), que é o que mantém a folha em uma página
+- Os **marcos da idade que ainda faltam**, área por área, em duas colunas — até três por área, e o resto como contagem ("+ 13 marcos — lista completa na tela"). É esse teto que garante a folha em uma página mesmo no pior caso
 - Rodapé com os créditos e o aviso de que não é exame nem diagnóstico
 
 Um detalhe que motivou o formato: navegadores imprimem **sem os fundos coloridos** por padrão, e a primeira versão saía com as barras vazias e sem o gráfico. Na folha atual nada depende de `background` — tudo é traço, texto ou SVG —, então ela sai igual com ou sem a opção "gráficos de plano de fundo" ligada.
+
+---
+
+## O desenho
+
+Cada uma das quatro áreas tem uma cor própria, e a tela inteira assume essa cor enquanto você responde — cartão, botões, barra de progresso e um leve halo no fundo. Trocar de área é uma mudança de ambiente, não só um título diferente:
+
+| Área | Cor |
+|---|---|
+| Social e Emocional | rosa profundo |
+| Linguagem e Comunicação | terracota |
+| Cognitivo | índigo |
+| Movimento e Desenvolvimento Físico | verde-mar |
+
+O título de cada etapa é a descrição da área ("Como a criança aprende, pensa e resolve problemas"), repetida em todas as etapas daquela área. Além da cor, a etapa mostra onde você está: as quatro barras no topo marcam o percurso pelas áreas, o anel à direita traz o número da etapa e um numeral grande em marca d'água o repete dentro do cartão. O rodapé do cartão fica fixo na base da tela com o botão de continuar, então em listas longas no celular a ação nunca sai de alcance.
+
+A tela evita explicar a si mesma: nada de estratégia do roteiro, de como a impressão é montada ou de o que é ou não guardado. Esse tipo de informação vive aqui, no README.
+
+O resultado e a folha impressa mantêm a paleta semântica de sempre — verde, âmbar e coral significam situação, não área — para que ninguém confunda "a cor do Cognitivo" com "está tudo bem".
 
 ---
 
