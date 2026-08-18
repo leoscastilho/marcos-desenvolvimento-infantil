@@ -66,27 +66,47 @@ Só depois das quatro áreas a página pede:
 - **Perda de habilidade já conquistada**
 - **Se algo preocupa quem respondeu**
 
-### 4. A etapa esperada para a idade
+### 4. A faixa esperada para a idade
 
-Os marcos existem em 12 faixas (2, 4, 6, 9, 12, 15 e 18 meses; 2 anos; 30 meses; 3, 4 e 5 anos), e a idade real quase nunca cai exatamente em uma delas. A faixa entre dois marcos é dividida ao meio e a idade vai para o **marco mais próximo** — no meio exato, sobe:
+Os marcos existem em 12 faixas (2, 4, 6, 9, 12, 15 e 18 meses; 2 anos; 30 meses; 3, 4 e 5 anos), e a idade real quase nunca cai exatamente em uma delas. Em vez de escolher um único marco de comparação, a página usa uma **faixa**:
 
-| Idade | Comparada com |
+- **Em cima de um marco** — só ele conta. Uma criança de 6 meses está no esperado se alcançou os marcos de 6 meses; está atrás se parou nos de 4; está à frente se alcançou os de 9.
+- **Entre dois marcos** — os dois contam. Aos 5 meses, alcançar os marcos de 4 **ou** os de 6 é compatível; abaixo dos de 4 está atrás; a partir dos de 9, à frente.
+- **Perto de um marco** — vale a histerese: dentro de **25% do intervalo**, a criança ainda é comparada só com o marco vizinho. Aos 4 anos e 1 mês a comparação é só com 4 anos (25% de 12 meses = 3 meses); de 4 anos e 4 meses em diante, com 4 **ou** 5 anos. Em intervalos curtos, como de 2 para 4 meses, a margem é pequena demais para mudar alguma coisa.
+
+O resultado, mês a mês:
+
+| Idade | Comparada com | | Idade | Comparada com |
+|---|---|---|---|---|
+| 2 m | 2 meses | | 18–19 m | 18 meses |
+| 3 m | 2 ou 4 meses | | 20–22 m | 18 meses ou 2 anos |
+| 4 m | 4 meses | | 23–25 m | 2 anos |
+| 5 m | 4 ou 6 meses | | 26–28 m | 2 anos ou 30 meses |
+| 6 m | 6 meses | | 29–31 m | 30 meses |
+| 7–8 m | 6 ou 9 meses | | 32–34 m | 30 meses ou 3 anos |
+| 9 m | 9 meses | | 35–39 m | 3 anos |
+| 10–11 m | 9 ou 12 meses | | 40–44 m | 3 anos ou 4 anos |
+| 12 m | 12 meses | | 45–51 m | 4 anos |
+| 13–14 m | 12 ou 15 meses | | 52–56 m | 4 ou 5 anos |
+| 15 m | 15 meses | | 57 m ou + | 5 anos |
+| 16–17 m | 15 ou 18 meses | | | |
+
+A situação de cada área sai daí:
+
+| Etapa mais alta alcançada | Situação |
 |---|---|
-| 14–16 meses | 15 meses |
-| 17–20 meses | 18 meses |
-| 21–26 meses | 2 anos |
-| 27–32 meses | 30 meses |
-| 33–41 meses | 3 anos |
-| 42–53 meses | 4 anos |
-| 54 meses ou mais | 5 anos |
+| Acima do teto da faixa | **Acima do esperado** |
+| Dentro da faixa | **Compatível com a idade** |
+| Uma etapa abaixo do piso | **Marcos da idade incompletos** (atenção) |
+| Duas ou mais abaixo do piso | **Distância importante** (alerta) |
 
-Isso vale só para a **situação da área** — a comparação entre o que a criança faz e o que se espera. As faixas de cima são largas: aos 4 anos e 6 meses a criança já é comparada com os marcos de 5 anos, o que torna a leitura mais exigente perto do fim da tabela.
+Os marcos que "ainda faltam" e os textos de alerta se referem ao **piso** da faixa — o que já era esperado, não o que vem a seguir.
 
 ### 5. O resultado
 
 O perfil aparece em duas visualizações, na mesma posição da página, alternadas por abas ou deslizando o dedo para o lado (no teclado, setas ← →):
 
-**Trilhas por área.** Quatro pistas, uma por área, preenchidas até a etapa alcançada, com um marcador vertical na etapa esperada para a idade — desenhado fora da pista, para continuar visível nos extremos (2 meses e 5 anos):
+**Trilhas por área.** Quatro pistas, uma por área, preenchidas até a etapa alcançada. O marcador vertical escuro fica no piso da faixa esperada e, quando a faixa tem dois marcos, uma área hachurada e um segundo marcador claro mostram até onde ela vai. Os marcadores são desenhados fora da pista, para continuar visíveis nos extremos (2 meses e 5 anos):
 
 - **Verde** — no esperado ou acima
 - **Âmbar** — uma etapa atrás
@@ -94,7 +114,7 @@ O perfil aparece em duas visualizações, na mesma posição da página, alterna
 
 **Gráfico de teia.** Um radar de quatro eixos, um por área, com a escala das 12 etapas do centro para fora:
 
-- O **polígono azul apagado** ao fundo é o esperado para a idade informada — como todas as áreas compartilham a mesma expectativa, ele é sempre um losango regular
+- O **polígono azul apagado** ao fundo é o piso da faixa esperada — como todas as áreas compartilham a mesma expectativa, ele é sempre um losango regular; quando a faixa tem dois marcos, um segundo losango tracejado, mais claro, marca o teto
 - Por cima, em **traço escuro**, o que a criança de fato faz; cada vértice recebe a cor da situação daquela área (verde, âmbar ou coral)
 - O **contorno tracejado** meia etapa à frente, com um ponto vazado, marca as etapas respondidas como *faz em parte* — o que já está começando
 
@@ -116,7 +136,7 @@ Imprimir não imprime a página: o botão gera uma folha própria, montada para 
 
 - Cabeçalho com a idade, a idade corrigida quando houver, a etapa esperada e a data da impressão
 - A frase-resumo do perfil
-- O **gráfico de barras**, uma por área, com a etapa alcançada escrita na própria barra, a situação em texto colorido à direita e o marcador da etapa esperada para a idade
+- O **gráfico de barras**, uma por área, com a etapa alcançada escrita na própria barra, a situação em texto colorido à direita e os marcadores da faixa esperada para a idade
 - Os alertas reduzidos a uma linha cada — os mesmos da tela, em versão curta
 - Os **marcos da idade que ainda faltam**, área por área, em duas colunas — até três por área, e o resto como contagem ("+ 13 marcos — lista completa na tela"). É esse teto que garante a folha em uma página mesmo no pior caso
 - Um quadro em branco para anotações durante a consulta
@@ -190,7 +210,7 @@ Qualquer hospedagem de arquivos estáticos serve. No GitHub Pages:
 
 ```bash
 git init
-git add index.html README.md
+git add index.html README.md LICENSE
 git commit -m "Marcos do Desenvolvimento Infantil"
 gh repo create marcos-desenvolvimento-infantil --public --source=. --push
 gh api -X POST repos/:owner/marcos-desenvolvimento-infantil/pages \
@@ -199,6 +219,8 @@ gh api -X POST repos/:owner/marcos-desenvolvimento-infantil/pages \
 
 O arquivo precisa se chamar `index.html` na raiz. Não há dependências externas, então funciona igualmente offline, aberto direto do disco.
 
-## Direitos
+## Licença e direitos
 
-Materiais produzidos pelo CDC são, em geral, de domínio público nos Estados Unidos. A tradução em português foi realizada pela SBP **mediante autorização do CDC** — antes de redistribuir, adaptar comercialmente ou usar institucionalmente esta página, verifique os termos com a Sociedade Brasileira de Pediatria. Mantenha os créditos ao CDC, à SBP e à Sociedade Paraibana de Pediatria visíveis, como estão no rodapé da página.
+O código desta página está sob **licença MIT** (arquivo [`LICENSE`](LICENSE)), com autoria de Leo Castilho — é o que a barra no rodapé da página informa, junto do link para o código-fonte.
+
+O conteúdo dos marcos é outra história. Materiais produzidos pelo CDC são, em geral, de domínio público nos Estados Unidos. A tradução em português foi realizada pela SBP **mediante autorização do CDC** — antes de redistribuir, adaptar comercialmente ou usar institucionalmente esta página, verifique os termos com a Sociedade Brasileira de Pediatria. Mantenha os créditos ao CDC, à SBP e à Sociedade Paraibana de Pediatria visíveis, como estão no rodapé da página.

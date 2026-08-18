@@ -281,7 +281,13 @@ select,input[type=number]{
 .pista .preenche.ok{background:var(--agua)}
 .pista .preenche.atencao{background:var(--ambar)}
 .pista .preenche.alerta{background:var(--coral)}
+.tolerancia{
+  position:absolute;top:-2px;bottom:-2px;border-radius:4px;
+  background:repeating-linear-gradient(135deg,rgba(36,31,53,.16) 0 3px,rgba(36,31,53,0) 3px 6px);
+  pointer-events:none;
+}
 .marcador{position:absolute;top:-6px;bottom:-6px;width:2.5px;border-radius:2px;background:var(--tinta);transform:translateX(-1.25px)}
+.marcador.leve{opacity:.42}
 .marcador::after{
   content:"";position:absolute;top:-4px;left:-3px;width:9px;height:9px;border-radius:50%;background:var(--tinta);
 }
@@ -317,6 +323,7 @@ select,input[type=number]{
 .teia .nome{font-size:13px;font-weight:700;fill:var(--tinta)}
 .teia .valor{font-size:11px;fill:var(--tinta-70);font-family:var(--dado)}
 .teia .ideal{fill:var(--rio);fill-opacity:.28;stroke:var(--rio);stroke-width:1.5;stroke-opacity:.6;stroke-linejoin:round}
+.teia .tolerancia-teia{fill-opacity:.13;stroke-opacity:.35;stroke-dasharray:4 3}
 .teia .real{fill:var(--tinta);fill-opacity:.14;stroke:var(--tinta);stroke-width:2.5;stroke-linejoin:round}
 .teia .emergente{fill:none;stroke:var(--tinta);stroke-width:2;stroke-dasharray:5 4;stroke-opacity:.8;stroke-linejoin:round}
 .teia .ponto{stroke:var(--papel);stroke-width:2}
@@ -350,6 +357,25 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
 @keyframes sobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.aparece{animation:none}*{transition-duration:.01ms !important}}
 
+/* ---------- barra de rodapé ---------- */
+.barra-rodape{
+  margin-top:30px;padding:18px 18px 4px;border-top:1px solid var(--linha);
+  color:var(--tinta-70);font-size:12.5px;
+}
+.barra-inner{
+  max-width:760px;margin:0 auto;display:flex;flex-direction:column;align-items:center;
+  gap:8px;text-align:center;
+}
+.barra-frase{font-family:var(--display);font-style:italic;font-size:15.5px;color:var(--tinta)}
+.barra-linha{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:5px 12px;
+  font-family:var(--dado);font-size:11px;letter-spacing:.06em;
+}
+.barra-rodape a{color:var(--tinta-70);text-decoration:none;border-bottom:1px solid var(--linha-forte)}
+.barra-rodape a:hover{color:var(--ac-t);border-color:var(--ac)}
+.barra-sep{color:var(--linha-forte);user-select:none}
+body.respondendo .barra-rodape{display:none}
+
 /* em telas de toque, hover não deve “grudar” depois do toque */
 @media (hover:none){
   .marco-toque:hover{border-color:var(--linha);background:var(--papel)}
@@ -370,7 +396,7 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
   @page{margin:10mm}
   body{background:#fff}
   body::before{display:none}
-  .acoes,.topo-etapa,.abas,.rodape-etapa{display:none}
+  .acoes,.topo-etapa,.abas,.rodape-etapa,.barra-rodape{display:none}
   .card{box-shadow:none;break-inside:avoid}
   .palco-graficos{height:auto !important;overflow:visible}
   .faixa-graficos{display:block;transform:none !important}
@@ -409,6 +435,8 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
   .barras .b-val{font-family:var(--dado);font-size:9.5px;fill:var(--tinta-70)}
   .barras .b-val.dentro{fill:#FFFFFF}
   .barras .b-marca{stroke:var(--tinta);stroke-width:2}
+  .barras .b-marca.leve{stroke-opacity:.4}
+  .barras .b-tol{fill:none;stroke:var(--tinta);stroke-width:1;stroke-opacity:.3;stroke-dasharray:3 3}
   .barras .b-marca-pt{fill:var(--tinta)}
   .barras .b-regua{font-family:var(--dado);font-size:8px;fill:var(--tinta-40)}
 
@@ -452,6 +480,19 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
   (<a href="https://www.sbp.com.br/fileadmin/user_upload/_24327e-Cartilha_de_Desenvolvimento-2m-5anos_compressed.pdf" target="_blank" rel="noopener">baixar o PDF</a>).<br>
   Esta página não é exame, triagem validada nem diagnóstico. Ela organiza suas observações para a conversa com o pediatra.
 </p>
+
+<footer class="barra-rodape">
+  <div class="barra-inner">
+    <p class="barra-frase">Um projeto pela conscientização do desenvolvimento infantil.</p>
+    <div class="barra-linha">
+      <span>© 2026 <a href="https://www.linkedin.com/in/lscastilho/" target="_blank" rel="noopener">Leo Castilho</a></span>
+      <span class="barra-sep">·</span>
+      <a href="https://github.com/leoscastilho/marcos-desenvolvimento-infantil/blob/main/LICENSE" target="_blank" rel="noopener">Licença MIT</a>
+      <span class="barra-sep">·</span>
+      <a href="https://github.com/leoscastilho/marcos-desenvolvimento-infantil" target="_blank" rel="noopener">Código-fonte</a>
+    </div>
+  </div>
+</footer>
 
 </div>
 
@@ -605,19 +646,31 @@ function temEmergente(respostas){
   const alc=nivelAlcancado(respostas);
   return respostas[alc+1]==="parcial";
 }
-/* Etapa esperada para a idade: a faixa entre dois marcos é dividida ao meio e
-   a idade vai para o marco mais próximo — no meio exato, sobe.
-   Ex.: 17 a 20 meses comparam com 18 meses; 21 a 26, com 24. */
-function nivelEsperado(meses){
+/* Faixa esperada para a idade.
+   Entre dois marcos, a criança é comparada com os dois: aos 5 meses, alcançar
+   os marcos de 4 OU os de 6 já é compatível. Perto de um marco, só ele conta —
+   a margem é de 25% do intervalo (histerese). Ex.: 4 anos e 1 mês ainda é
+   comparada só com 4 anos (25% de 12 meses = 3 meses); de 4 anos e 4 meses em
+   diante, com 4 e 5 anos. Em intervalos curtos, como de 2 para 4 meses, a
+   margem é pequena demais para valer. Em cima de um marco exato, só ele conta. */
+function faixaEsperada(meses){
   const ultimo=IDADES.length-1;
-  if(meses<IDADES[0]) return -1;
-  if(meses>=IDADES[ultimo]) return ultimo;
+  if(meses<IDADES[0]) return {inf:-1,sup:-1};
+  if(meses>=IDADES[ultimo]) return {inf:ultimo,sup:ultimo};
   for(let i=0;i<ultimo;i++){
-    if(meses>=IDADES[i] && meses<IDADES[i+1]){
-      return meses >= (IDADES[i]+IDADES[i+1])/2 ? i+1 : i;
+    if(meses===IDADES[i]) return {inf:i,sup:i};
+    if(meses>IDADES[i] && meses<IDADES[i+1]){
+      const margem=(IDADES[i+1]-IDADES[i])*0.25;
+      if(meses<=IDADES[i]+margem)   return {inf:i,  sup:i};
+      if(meses>=IDADES[i+1]-margem) return {inf:i+1,sup:i+1};
+      return {inf:i,sup:i+1};
     }
   }
-  return ultimo;
+  return {inf:ultimo,sup:ultimo};
+}
+function textoFaixa(inf,sup){
+  if(inf<0) return "—";
+  return inf===sup ? ROTULOS[inf] : ROTULOS[inf]+" ou "+ROTULOS[sup];
 }
 function mesesCorrigidos(){
   if(estado.prematuro==="sim" && estado.semanasPrem>0 && estado.meses<24){
@@ -975,7 +1028,7 @@ function telaFinal(){
    Por cima: o que a criança faz de fato, em traço escuro.
    Tracejado: a etapa que já está começando ("faz em parte").
    ============================================================ */
-function svgTeia(analise,esperado,total,corrigida){
+function svgTeia(analise,esperado,esperadoSup,total,corrigida){
   const N=analise.length;
   const CX=250, CY=214, R=132;
   const CORES={ok:"var(--agua)",atencao:"var(--ambar)",alerta:"var(--coral)"};
@@ -988,6 +1041,7 @@ function svgTeia(analise,esperado,total,corrigida){
   const curto=v=>v<1?"—":ROTULOS[v-1].replace(" meses","m").replace(" mês","m").replace(" anos","a");
 
   const vIdeal=analise.map(()=>esperado+1);
+  const vIdealSup=analise.map(()=>esperadoSup+1);
   const vReal=analise.map(a=>a.alc+1);
   const vEmerg=analise.map((a,i)=>vReal[i]+(a.emergente?0.5:0));
   const temEmerg=analise.some(a=>a.emergente);
@@ -1038,8 +1092,9 @@ function svgTeia(analise,esperado,total,corrigida){
 
   return `
   <svg class="teia" viewBox="0 0 500 420" role="img"
-       aria-label="Gráfico de teia comparando o esperado para ${textoIdade(corrigida)} com o que a criança faz em cada área.">
+       aria-label="Gráfico de teia comparando a faixa esperada para ${textoIdade(corrigida)} com o que a criança faz em cada área.">
     <g>${grade}</g>
+    ${esperadoSup>esperado?`<polygon class="ideal tolerancia-teia" points="${poli(vIdealSup)}"></polygon>`:""}
     <polygon class="ideal" points="${poli(vIdeal)}"></polygon>
     <g>${rotAneis}</g>
     <polygon class="real" points="${poli(vReal)}"></polygon>
@@ -1055,7 +1110,7 @@ function svgTeia(analise,esperado,total,corrigida){
    "gráficos de plano de fundo" desligados, ao contrário de
    background-color.
    ============================================================ */
-function svgBarras(analise,esperado,total){
+function svgBarras(analise,esperado,esperadoSup,total){
   const W=700, LINHA=48, TOPO=4;
   const ALT=TOPO+analise.length*LINHA+18;
   const CORES={ok:"var(--agua)",atencao:"var(--ambar)",alerta:"var(--coral)"};
@@ -1065,7 +1120,8 @@ function svgBarras(analise,esperado,total){
     const y=TOPO+i*LINHA;
     const yb=y+18;                                   // topo da barra
     const w=(a.alc+1)/total*W;
-    const xm=Math.min(W-1.25,Math.max(1.25,(esperado+1)/total*W));
+    const pos=n=>Math.min(W-1.25,Math.max(1.25,(n+1)/total*W));
+    const xm=pos(esperado), xs=pos(esperadoSup);
     const rot=(a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc])+(a.emergente?" +":"");
 
     s+=`<text class="b-nome" x="0" y="${y+10}">${a.area.nome}</text>`;
@@ -1075,6 +1131,10 @@ function svgBarras(analise,esperado,total){
     s+= w>170
       ? `<text class="b-val dentro" x="${(w-9).toFixed(1)}" y="${yb+12.5}" text-anchor="end">${rot}</text>`
       : `<text class="b-val" x="${(w+9).toFixed(1)}" y="${yb+12.5}">${rot}</text>`;
+    if(xs>xm){
+      s+=`<rect class="b-tol" x="${xm.toFixed(1)}" y="${yb-2}" width="${(xs-xm).toFixed(1)}" height="22" rx="4"></rect>`;
+      s+=`<line class="b-marca leve" x1="${xs.toFixed(1)}" y1="${yb-6}" x2="${xs.toFixed(1)}" y2="${yb+24}"></line>`;
+    }
     s+=`<line class="b-marca" x1="${xm.toFixed(1)}" y1="${yb-6}" x2="${xm.toFixed(1)}" y2="${yb+24}"></line>`;
     s+=`<circle class="b-marca-pt" cx="${xm.toFixed(1)}" cy="${yb-7}" r="3.2"></circle>`;
   });
@@ -1087,7 +1147,7 @@ function svgBarras(analise,esperado,total){
   });
 
   return `<svg class="barras" viewBox="0 0 ${W} ${ALT}" role="img"
-    aria-label="Barras por área: até onde a criança chegou e a etapa esperada para a idade.">${s}</svg>`;
+    aria-label="Barras por área: até onde a criança chegou e a faixa esperada para a idade.">${s}</svg>`;
 }
 
 /* ============================================================
@@ -1098,7 +1158,7 @@ function svgBarras(analise,esperado,total){
    imprimir sem "gráficos de plano de fundo", então tudo aqui é
    traço, texto ou SVG.
    ============================================================ */
-function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
+function montaImpressao(analise,esperado,esperadoSup,total,corrigida,avisos,resumoTexto){
   const antigo=document.getElementById("impressao");
   if(antigo) antigo.remove();
 
@@ -1136,7 +1196,7 @@ function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
         <b>${textoIdade(estado.meses)}</b>
         ${prem?`prematura, ${40-estado.semanasPrem} semanas<br>`:""}
         ${corrigiu?`idade corrigida ${textoIdade(corrigida)}<br>`:""}
-        esperado para a idade: ${ROTULOS[esperado]}<br>
+        esperado para a idade: ${textoFaixa(esperado,esperadoSup)}<br>
         impresso em ${hoje}
       </div>
     </div>
@@ -1145,12 +1205,12 @@ function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
 
     <div class="imp-secao">
       <div class="imp-h">Perfil por área</div>
-      ${svgBarras(analise,esperado,total)}
+      ${svgBarras(analise,esperado,esperadoSup,total)}
       <p class="imp-legenda">
         <b style="color:var(--agua)">■</b> no esperado ou acima &nbsp;
         <b style="color:var(--ambar)">■</b> uma etapa atrás &nbsp;
         <b style="color:var(--coral)">■</b> duas etapas ou mais &nbsp;
-        <b>|</b> etapa esperada para ${textoIdade(corrigida)}
+        <b>|</b> esperado: ${textoFaixa(esperado,esperadoSup)}
         ${analise.some(a=>a.emergente)?"&nbsp; <b>+</b> etapa seguinte começando":""}
       </p>
     </div>
@@ -1244,16 +1304,18 @@ function montaAbas(){
    ============================================================ */
 function telaResultado(){
   const corrigida=mesesCorrigidos();
-  const esperado=nivelEsperado(corrigida);
+  const faixa=faixaEsperada(corrigida);
+  const esperado=faixa.inf, esperadoSup=faixa.sup;
+  const rotEsperado=textoFaixa(esperado,esperadoSup);
   const total=IDADES.length;
 
   const analise=AREAS.map(area=>{
     const r=estado.respostas[area.id];
     const alc=nivelAlcancado(r);
-    const dif=alc-esperado;
+    const dif=alc-esperado;               // distância até o piso da faixa
     let classe,rotulo,tag;
-    if(dif>=1){ classe="ok"; rotulo="Acima do esperado"; tag="t-ok"; }
-    else if(dif===0){ classe="ok"; rotulo="Compatível com a idade"; tag="t-ok"; }
+    if(alc>esperadoSup){ classe="ok"; rotulo="Acima do esperado"; tag="t-ok"; }
+    else if(alc>=esperado){ classe="ok"; rotulo="Compatível com a idade"; tag="t-ok"; }
     else if(dif===-1){ classe="atencao"; rotulo="Marcos da idade incompletos"; tag="t-atencao"; }
     else { classe="alerta"; rotulo="Distância importante"; tag="t-alerta"; }
     const marcasArea=estado.marcas[area.id]||[];
@@ -1313,14 +1375,14 @@ function telaResultado(){
             <span><i class="chave" style="background:var(--agua)"></i> No esperado ou acima</span>
             <span><i class="chave" style="background:var(--ambar)"></i> Uma etapa atrás</span>
             <span><i class="chave" style="background:var(--coral)"></i> Duas etapas ou mais</span>
-            <span><i class="chave" style="background:var(--tinta);width:3px;height:14px;border-radius:0"></i> Idade da criança</span>
+            <span><i class="chave" style="background:var(--tinta);width:3px;height:14px;border-radius:0"></i> Esperado para a idade${esperadoSup>esperado?" (faixa)":""}</span>
           </div>
         </section>
 
         <section class="painel" id="painel-1" role="tabpanel" aria-labelledby="aba-1">
           <div id="teia"></div>
           <div class="legenda">
-            <span><i class="chave" style="background:var(--rio);opacity:.45"></i> Esperado para ${textoIdade(corrigida)}</span>
+            <span><i class="chave" style="background:var(--rio);opacity:.45"></i> Esperado para ${textoIdade(corrigida)}: ${rotEsperado}</span>
             <span><i class="chave linha-cheia"></i> O que a criança faz</span>
             ${analise.some(a=>a.emergente)?'<span><i class="chave tracejada"></i> Etapa começando</span>':""}
           </div>
@@ -1332,9 +1394,11 @@ function telaResultado(){
   palco.appendChild(c1);
 
   const g=document.getElementById("grafico");
+  const posMarc=n=>Math.min(99.5,Math.max(.5,((n+1)/total)*100));
   analise.forEach(a=>{
     const larg=((a.alc+1)/total)*100;
-    const marc=((esperado+1)/total)*100;
+    const marc=posMarc(esperado);
+    const marcSup=posMarc(esperadoSup);
     const el=document.createElement("div");
     el.className="faixa";
     el.innerHTML=`
@@ -1346,13 +1410,15 @@ function telaResultado(){
         <div class="pista">
           <div class="preenche ${a.classe}" style="width:${Math.max(larg,0)}%"></div>
         </div>
-        <div class="marcador" style="left:${Math.min(99.5,Math.max(.5,marc)).toFixed(2)}%"></div>
+        ${esperadoSup>esperado?`<div class="tolerancia" style="left:${marc.toFixed(2)}%;width:${(marcSup-marc).toFixed(2)}%"></div>
+        <div class="marcador leve" style="left:${marcSup.toFixed(2)}%"></div>`:""}
+        <div class="marcador" style="left:${marc.toFixed(2)}%"></div>
       </div>
     `;
     g.appendChild(el);
   });
 
-  document.getElementById("teia").innerHTML=svgTeia(analise,esperado,total,corrigida);
+  document.getElementById("teia").innerHTML=svgTeia(analise,esperado,esperadoSup,total,corrigida);
   montaAbas();
 
   /* ---- alertas: montados uma vez, em duas versões (tela e impressão) ---- */
@@ -1367,8 +1433,8 @@ function telaResultado(){
   graves.forEach(a=>{
     avisos.push({n:"alerta",peso:true,
       t:`${a.area.nome}: duas ou mais etapas atrás`,
-      longo:`A criança alcançou os marcos de ${a.alc<0?"antes da primeira etapa":ROTULOS[a.alc]}, e para ${textoIdade(corrigida)} espera-se os de ${ROTULOS[esperado]}. Peça ao pediatra uma triagem do desenvolvimento e, se a preocupação continuar, um encaminhamento para especialista.`,
-      curto:`Alcançou ${a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc]}; esperado ${ROTULOS[esperado]}. Pedir triagem do desenvolvimento e, se persistir, encaminhamento.`});
+      longo:`A criança alcançou os marcos de ${a.alc<0?"antes da primeira etapa":ROTULOS[a.alc]}, e para ${textoIdade(corrigida)} espera-se os de ${rotEsperado}. Peça ao pediatra uma triagem do desenvolvimento e, se a preocupação continuar, um encaminhamento para especialista.`,
+      curto:`Alcançou ${a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc]}; esperado ${rotEsperado}. Pedir triagem do desenvolvimento e, se persistir, encaminhamento.`});
   });
   analise.filter(a=>a.dif===-1).forEach(a=>{
     avisos.push({n:"atencao",peso:true,
@@ -1427,7 +1493,7 @@ function telaResultado(){
       <summary>${a.area.nome} <span class="tag ${a.tag}">${a.rotulo}</span></summary>
       <p class="miudo" style="margin-top:10px">
         Etapa completa mais avançada: <strong>${a.alc<0?"nenhuma":ROTULOS[a.alc]}</strong>${a.emergente?" — e a etapa seguinte já está começando":""}.
-        Esperado para ${textoIdade(corrigida)}: <strong>${esperado<0?"—":ROTULOS[esperado]}</strong>.
+        Esperado para ${textoIdade(corrigida)}: <strong>${rotEsperado}</strong>.
       </p>
       ${a.faltando.length? `<p style="margin:10px 0 0;font-size:14.5px"><strong>Marcos que ainda faltam para a idade:</strong></p>
         <ul class="faltantes">${a.faltando.map(m=>`<li>${m}</li>`).join("")}</ul>`
@@ -1465,7 +1531,7 @@ function telaResultado(){
     </div>
   `;
   palco.appendChild(c4);
-  montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto);
+  montaImpressao(analise,esperado,esperadoSup,total,corrigida,avisos,resumoTexto);
 }
 
 render();
