@@ -398,26 +398,19 @@ summary{cursor:pointer;font-weight:600;font-size:15px}
     font-family:var(--dado);font-size:7pt;letter-spacing:.16em;text-transform:uppercase;font-weight:400;
     color:var(--tinta-70);margin:0 0 6px;padding-bottom:3px;border-bottom:1px solid var(--linha);
   }
-  .imp-secao{margin-bottom:6px}
-  .imp-cols{display:flex;gap:18px;align-items:flex-start;margin-bottom:9px}
-  .imp-col-a{flex:0 0 43%}
-  .imp-col-b{flex:1;min-width:0}
-  .imp-cols .teia{max-width:none;width:100%;margin:0}
-  .imp-legenda{font-size:7.4pt;color:var(--tinta-70);text-align:center;margin:2px 0 0}
+  .imp-secao{margin-bottom:10px}
+  .imp-legenda{font-size:7.4pt;color:var(--tinta-70);text-align:center;margin:4px 0 0}
   .imp-legenda b{font-weight:700}
 
-  table.imp-tab{width:100%;border-collapse:collapse}
-  table.imp-tab th{
-    font-family:var(--dado);font-size:6.4pt;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--tinta-70);font-weight:400;text-align:left;padding:0 5px 4px 0;
-  }
-  table.imp-tab td{padding:4px 5px;padding-left:0;border-top:1px solid var(--linha);font-size:8.8pt;vertical-align:middle}
-  table.imp-tab td.area{font-weight:700;font-size:9pt}
-  table.imp-tab td:last-child,table.imp-tab th:last-child{padding-right:0;text-align:right}
-  .imp-chip{
-    display:inline-block;border:1px solid;border-radius:999px;padding:1px 7px;
-    font-family:var(--dado);font-size:6.4pt;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
-  }
+  .barras{display:block;width:100%;height:auto}
+  .barras .b-nome{font-size:12.5px;font-weight:700;fill:var(--tinta)}
+  .barras .b-sit{font-family:var(--dado);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase}
+  .barras .b-trilho{fill:#F3EEE7;stroke:var(--linha);stroke-width:1}
+  .barras .b-val{font-family:var(--dado);font-size:9.5px;fill:var(--tinta-70)}
+  .barras .b-val.dentro{fill:#FFFFFF}
+  .barras .b-marca{stroke:var(--tinta);stroke-width:2}
+  .barras .b-marca-pt{fill:var(--tinta)}
+  .barras .b-regua{font-family:var(--dado);font-size:8px;fill:var(--tinta-40)}
 
   .imp-aviso{border-left:3px solid;padding:1px 0 2px 8px;margin:0 0 4px;font-size:8.6pt;line-height:1.3;break-inside:avoid}
   .imp-aviso b{display:block;font-size:9pt}
@@ -612,10 +605,19 @@ function temEmergente(respostas){
   const alc=nivelAlcancado(respostas);
   return respostas[alc+1]==="parcial";
 }
+/* Etapa esperada para a idade: a faixa entre dois marcos é dividida ao meio e
+   a idade vai para o marco mais próximo — no meio exato, sobe.
+   Ex.: 17 a 20 meses comparam com 18 meses; 21 a 26, com 24. */
 function nivelEsperado(meses){
-  let idx=0;
-  IDADES.forEach((m,i)=>{ if(meses>=m) idx=i; });
-  return meses<IDADES[0] ? -1 : idx;
+  const ultimo=IDADES.length-1;
+  if(meses<IDADES[0]) return -1;
+  if(meses>=IDADES[ultimo]) return ultimo;
+  for(let i=0;i<ultimo;i++){
+    if(meses>=IDADES[i] && meses<IDADES[i+1]){
+      return meses >= (IDADES[i]+IDADES[i+1])/2 ? i+1 : i;
+    }
+  }
+  return ultimo;
 }
 function mesesCorrigidos(){
   if(estado.prematuro==="sim" && estado.semanasPrem>0 && estado.meses<24){
@@ -1048,12 +1050,53 @@ function svgTeia(analise,esperado,total,corrigida){
 }
 
 /* ============================================================
+   GRÁFICO DE BARRAS EM SVG — versão do gráfico de trilhas usada
+   na impressão. Em SVG porque fill de SVG imprime mesmo com os
+   "gráficos de plano de fundo" desligados, ao contrário de
+   background-color.
+   ============================================================ */
+function svgBarras(analise,esperado,total){
+  const W=700, LINHA=48, TOPO=4;
+  const ALT=TOPO+analise.length*LINHA+18;
+  const CORES={ok:"var(--agua)",atencao:"var(--ambar)",alerta:"var(--coral)"};
+  let s="";
+
+  analise.forEach((a,i)=>{
+    const y=TOPO+i*LINHA;
+    const yb=y+18;                                   // topo da barra
+    const w=(a.alc+1)/total*W;
+    const xm=Math.min(W-1.25,Math.max(1.25,(esperado+1)/total*W));
+    const rot=(a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc])+(a.emergente?" +":"");
+
+    s+=`<text class="b-nome" x="0" y="${y+10}">${a.area.nome}</text>`;
+    s+=`<text class="b-sit" x="${W}" y="${y+10}" text-anchor="end" fill="${CORES[a.classe]}">${a.rotulo}</text>`;
+    s+=`<rect class="b-trilho" x="0" y="${yb}" width="${W}" height="18" rx="9"></rect>`;
+    if(a.alc>=0) s+=`<rect x="0" y="${yb}" width="${w.toFixed(1)}" height="18" rx="9" fill="${CORES[a.classe]}"></rect>`;
+    s+= w>170
+      ? `<text class="b-val dentro" x="${(w-9).toFixed(1)}" y="${yb+12.5}" text-anchor="end">${rot}</text>`
+      : `<text class="b-val" x="${(w+9).toFixed(1)}" y="${yb+12.5}">${rot}</text>`;
+    s+=`<line class="b-marca" x1="${xm.toFixed(1)}" y1="${yb-6}" x2="${xm.toFixed(1)}" y2="${yb+24}"></line>`;
+    s+=`<circle class="b-marca-pt" cx="${xm.toFixed(1)}" cy="${yb-7}" r="3.2"></circle>`;
+  });
+
+  const yr=TOPO+analise.length*LINHA+8;
+  ROTULOS.forEach((r,i)=>{
+    const x=((i+0.5)/total*W).toFixed(1);
+    const curto=r.replace(" meses","m").replace(" mês","m").replace(" anos","a");
+    s+=`<text class="b-regua" x="${x}" y="${yr}" text-anchor="middle">${curto}</text>`;
+  });
+
+  return `<svg class="barras" viewBox="0 0 ${W} ${ALT}" role="img"
+    aria-label="Barras por área: até onde a criança chegou e a etapa esperada para a idade.">${s}</svg>`;
+}
+
+/* ============================================================
    FOLHA DE IMPRESSÃO
-   Uma página resumida, montada fora do #palco: gráfico de teia,
-   tabela por área, alertas em uma linha, marcos da idade que
-   faltam e espaço para anotações. Nada depende de cor de fundo —
-   navegadores costumam imprimir sem "gráficos de plano de fundo",
-   então tudo aqui é traço, texto ou SVG.
+   Uma página resumida, montada fora do #palco: gráfico de barras,
+   alertas em uma linha, marcos da idade que faltam e espaço para
+   anotações. Nada depende de cor de fundo — navegadores costumam
+   imprimir sem "gráficos de plano de fundo", então tudo aqui é
+   traço, texto ou SVG.
    ============================================================ */
 function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
   const antigo=document.getElementById("impressao");
@@ -1063,13 +1106,6 @@ function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
   const hoje=new Date().toLocaleDateString("pt-BR");
   const prem=estado.prematuro==="sim";
   const corrigiu=prem && estado.meses<24 && estado.semanasPrem>0;
-
-  const linhas=analise.map(a=>`
-    <tr>
-      <td class="area">${a.area.nome}</td>
-      <td>${a.alc<0?"antes da 1ª etapa":ROTULOS[a.alc]}${a.emergente?" <span style=\"color:var(--tinta-70)\">+ começando</span>":""}</td>
-      <td><span class="imp-chip" style="color:${COR[a.classe]};border-color:${COR[a.classe]}">${a.rotulo}</span></td>
-    </tr>`).join("");
 
   const listaAvisos=avisos.map(av=>`
     <div class="imp-aviso" style="border-color:${COR[av.n]}">
@@ -1107,35 +1143,34 @@ function montaImpressao(analise,esperado,total,corrigida,avisos,resumoTexto){
 
     <p class="imp-resumo">${resumoTexto}</p>
 
-    <div class="imp-cols">
-      <div class="imp-col-a">
-        <div class="imp-h">Perfil em teia</div>
-        ${svgTeia(analise,esperado,total,corrigida)}
-        <p class="imp-legenda">
-          <b style="color:var(--rio)">▨</b> esperado para a idade &nbsp;
-          <b style="color:var(--tinta)">▬</b> o que a criança faz
-          ${analise.some(a=>a.emergente)?'&nbsp; <b style="color:var(--tinta)">◌</b> etapa começando':""}
-        </p>
-        <div class="imp-h" style="margin-top:12px">Anotações para a consulta</div>
-        <div class="imp-notas">
-          <div class="risco"></div><div class="risco"></div><div class="risco" style="border-bottom:0"></div>
-        </div>
-      </div>
-      <div class="imp-col-b">
-        <div class="imp-h">Resumo por área</div>
-        <table class="imp-tab">
-          <thead><tr><th>Área</th><th>Etapa completa</th><th>Situação</th></tr></thead>
-          <tbody>${linhas}</tbody>
-        </table>
-        <div class="imp-h" style="margin-top:14px">O que merece atenção</div>
-        ${listaAvisos}
-      </div>
+    <div class="imp-secao">
+      <div class="imp-h">Perfil por área</div>
+      ${svgBarras(analise,esperado,total)}
+      <p class="imp-legenda">
+        <b style="color:var(--agua)">■</b> no esperado ou acima &nbsp;
+        <b style="color:var(--ambar)">■</b> uma etapa atrás &nbsp;
+        <b style="color:var(--coral)">■</b> duas etapas ou mais &nbsp;
+        <b>|</b> etapa esperada para ${textoIdade(corrigida)}
+        ${analise.some(a=>a.emergente)?"&nbsp; <b>+</b> etapa seguinte começando":""}
+      </p>
+    </div>
+
+    <div class="imp-secao">
+      <div class="imp-h">O que merece atenção</div>
+      ${listaAvisos}
     </div>
 
     ${faltas?`<div class="imp-secao">
       <div class="imp-h">Marcos de ${ROTULOS[esperado]} que ainda faltam</div>
       <div class="imp-faltas">${faltas}</div>
     </div>`:""}
+
+    <div class="imp-secao">
+      <div class="imp-h">Anotações para a consulta</div>
+      <div class="imp-notas">
+        <div class="risco"></div><div class="risco"></div><div class="risco" style="border-bottom:0"></div>
+      </div>
+    </div>
 
     <div class="imp-rodape">
       <strong>Não é exame, triagem validada nem diagnóstico</strong> — organiza as observações de quem convive com a criança

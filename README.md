@@ -66,7 +66,23 @@ Só depois das quatro áreas a página pede:
 - **Perda de habilidade já conquistada**
 - **Se algo preocupa quem respondeu**
 
-### 4. O resultado
+### 4. A etapa esperada para a idade
+
+Os marcos existem em 12 faixas (2, 4, 6, 9, 12, 15 e 18 meses; 2 anos; 30 meses; 3, 4 e 5 anos), e a idade real quase nunca cai exatamente em uma delas. A faixa entre dois marcos é dividida ao meio e a idade vai para o **marco mais próximo** — no meio exato, sobe:
+
+| Idade | Comparada com |
+|---|---|
+| 14–16 meses | 15 meses |
+| 17–20 meses | 18 meses |
+| 21–26 meses | 2 anos |
+| 27–32 meses | 30 meses |
+| 33–41 meses | 3 anos |
+| 42–53 meses | 4 anos |
+| 54 meses ou mais | 5 anos |
+
+Isso vale só para a **situação da área** — a comparação entre o que a criança faz e o que se espera. As faixas de cima são largas: aos 4 anos e 6 meses a criança já é comparada com os marcos de 5 anos, o que torna a leitura mais exigente perto do fim da tabela.
+
+### 5. O resultado
 
 O perfil aparece em duas visualizações, na mesma posição da página, alternadas por abas ou deslizando o dedo para o lado (no teclado, setas ← →):
 
@@ -82,7 +98,7 @@ O perfil aparece em duas visualizações, na mesma posição da página, alterna
 - Por cima, em **traço escuro**, o que a criança de fato faz; cada vértice recebe a cor da situação daquela área (verde, âmbar ou coral)
 - O **contorno tracejado** meia etapa à frente, com um ponto vazado, marca as etapas respondidas como *faz em parte* — o que já está começando
 
-A forma é o ponto: um losango encolhido de maneira uniforme é diferente de um losango torto, e é justamente o desnível entre áreas que interessa clinicamente. Na impressão, as duas visualizações saem uma abaixo da outra.
+A forma é o ponto: um losango encolhido de maneira uniforme é diferente de um losango torto, e é justamente o desnível entre áreas que interessa clinicamente. O gráfico de teia existe só na tela — a folha impressa usa as barras.
 
 Abaixo do gráfico vêm os alertas, nesta ordem de peso:
 
@@ -94,17 +110,19 @@ Abaixo do gráfico vêm os alertas, nesta ordem de peso:
 
 Cada área traz ainda a lista exata dos marcos que faltam para a idade.
 
-### 5. A folha impressa
+### 6. A folha impressa
 
 Imprimir não imprime a página: o botão gera uma folha própria, montada para caber em **uma página A4** e ser lida por quem atende. Ela traz, nessa ordem:
 
 - Cabeçalho com a idade, a idade corrigida quando houver, a etapa esperada e a data da impressão
 - A frase-resumo do perfil
-- O **gráfico de teia** e, abaixo dele, um quadro em branco para anotações durante a consulta
-- Uma tabela com a etapa completa e a situação de cada área
+- O **gráfico de barras**, uma por área, com a etapa alcançada escrita na própria barra, a situação em texto colorido à direita e o marcador da etapa esperada para a idade
 - Os alertas reduzidos a uma linha cada — os mesmos da tela, em versão curta
 - Os **marcos da idade que ainda faltam**, área por área, em duas colunas — até três por área, e o resto como contagem ("+ 13 marcos — lista completa na tela"). É esse teto que garante a folha em uma página mesmo no pior caso
+- Um quadro em branco para anotações durante a consulta
 - Rodapé com os créditos e o aviso de que não é exame nem diagnóstico
+
+O gráfico de barras é redesenhado em SVG para a impressão (o da tela é feito de `div`s com `background`, que os navegadores não imprimem). O gráfico de teia fica só na tela.
 
 Um detalhe que motivou o formato: navegadores imprimem **sem os fundos coloridos** por padrão, e a primeira versão saía com as barras vazias e sem o gráfico. Na folha atual nada depende de `background` — tudo é traço, texto ou SVG —, então ela sai igual com ou sem a opção "gráficos de plano de fundo" ligada.
 
